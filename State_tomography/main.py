@@ -27,9 +27,8 @@ import random
 from time import time
 
 #########################
-import compare_W #import all data from that file 
-import Cry_swap
-import Parl_swap #Create a parallel swap test when the depth > 1
+import compare_W  #CRY_Vd, CX_Vd losses
+import Cry_swap   #CRY_swap losses and fidelity
 import mult_m
 #We will create a function which does initialization and will have the same seed as for here
 
