@@ -1,2 +1,8 @@
-Main is adapt_pol.py, in this file you compare the swap test with the compilation test.
+Main is main.py, in this file you compare the swap test with the compilation test.
+
+It calls:
+main.Adam_QST    - output: Loss vector of CX_Swap, fidelity of CX_Swap
+Cry_swap.py      - output: Loss vector of CRY_Swap, fidelity of CRY_Swap
+Compare_W.py     - output: Loss vector of CRY_Vd, Loss vector of CX_Vd
+
 
