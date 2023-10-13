@@ -1,1 +1,18 @@
-
+ ·In svd_code.py the main function to be found is "SVD(N, depth, W_Haar, iterations, cores)".
+  The arguments stand for:
+    -N: Number of qubits to which the unitary is applied.
+    -depth: Depth of the used variational quantum circuit for SVD.
+    -W_Haar: Target unitary operator. A Haar-random one by default.
+    -iterations: Number of iterations used in the Adam learning algorithm.
+    -cores: Number of cores used in parallelization of the gradient computation.
+  This function outputs, in this order:
+    -The final cost obtained in the learning process.
+    -On ordered list of the learnt singular values.
+    -A unitary operator that, applied to the "i-th" computational basis state, it brings it to the "i-th" learnt singular vector.
+ 
+ ·In attack_svd_code.py the main function to be found is "Forgery_SVD(W_Haar, T, A, w)".
+  The arguments stand for:
+    -W_Haar: Unitary operator defining the QPUF that is going to be attacked.
+    -T: Target size.
+    -A: Ancilla size.
+    -w: Paremeter deciding if SVD attack is launched (w=0), a random attacked is launched (w=1) or the user behaviour is simulated (w=2).
