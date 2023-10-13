@@ -1,2 +1,2 @@
 PT_VQC process tomography scheme, the following code is parallelized, specify cores = X to use this property.
-The file produces an output of the fidelity vector and cost function of all intetions.
+The file produces an output of a fidelity vector and cost function vector.
