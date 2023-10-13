@@ -1,1 +1,2 @@
+Main is adapt_pol.py, in this file you compare the swap test with the compilation test.
 
