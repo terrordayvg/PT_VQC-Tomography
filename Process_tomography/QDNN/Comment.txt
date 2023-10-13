@@ -1,2 +1,4 @@
 QDNN_FOR_QPUF.py generates a QDNN in order to perform process tomography.
+The code present is based on the following article 10.1038/s41467-020-14454-2.
+
 
