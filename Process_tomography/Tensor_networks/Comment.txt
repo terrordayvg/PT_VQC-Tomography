@@ -1,1 +1,15 @@
+Variational_MPO.jl or ipynb file, is the main.
+It produces as output the fidelity of the comparison between the representation of U and MPO variational.
+The methodology is based on the following article: https://doi.org/10.1038/s41467-023-38332-9
+
+Requirements:
+This code was implemented with the Julia programming language and combined with the Jupiter notebook enviroment.
+Additional libraries needed: Pasta_Q - https://gtorlai.github.io/PastaQ.jl/dev/
+                             ITensors - https://itensor.org/
+                             Random - https://github.com/JuliaLang/julia/tree/master/stdlib/Random
+                             Observers - https://github.com/GTorlai/Observers.jl
+                             Optimisers: Optimisers - https://docs.sciml.ai/Optimization/stable/optimization_packages/optimisers/
+                             LinearAlgebra - https://github.com/JuliaLang/julia/tree/master/stdlib/LinearAlgebra
+                             SCS - https://github.com/jump-dev/SCS.jl
+                             Convex - https://jump.dev/Convex.jl/stable/
 
