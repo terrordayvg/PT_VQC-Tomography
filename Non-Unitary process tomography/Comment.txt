@@ -17,5 +17,5 @@
     -A: Ancilla size.
     -w: Paremeter deciding if SVD attack is launched (w=0), a random attacked is launched (w=1) or the user behaviour is simulated (w=2).
   This fuction ouptuts:
-    -Asbsolute deviation between generation outcome to be forgered and the one obtained at verification. In a cyclyc fashion, that is, the 
+    -Asbsolute deviation between generation outcome to be forgered and the one obtained at verification. In a cyclic fashion, that is, the 
      largest possible outcome, "2^A-1", preceeds the very first one, "0". 
