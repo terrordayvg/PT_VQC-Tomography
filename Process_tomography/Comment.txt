@@ -1,2 +1,13 @@
-PT_VQC process tomography scheme, the following code is parallelized, specify cores = X to use this property.
-The file produces an output of a fidelity vector and cost function vector.
+·PT_VQC process tomography scheme, the following code is parallelized, specify cores = X to use this property.
+ The file produces an output of a fidelity vector and cost function vector.
+
+·The most important function to be found in process_tomography_code.py is "Process(V, N, iterations, depth, cores)".
+ It takes, as an input:
+  -V: Unitary operator to be learnt.
+  -N: Number of qubits which the unitary is applied to.
+  -iterations: Number of iterations used in the Adam learning subroutine.
+  -depth: Depth used in the variational ansatz.
+  -cores: Number of cores used within the gradient computation parallellization.
+ This function outputs, in this order.
+  -The matrix corresponding to the learnt unitary operator.
+  -A list of circuits from which one can then obtain an ordered list of the cost function computed after each iteration.
