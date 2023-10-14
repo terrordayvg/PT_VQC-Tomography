@@ -1,4 +1,4 @@
- ·In svd_code.py the main function to be found is "SVD(N, depth, W_Haar, iterations, cores)".
+ ·In svd_code.py the most important function to be found is "SVD(N, depth, W_Haar, iterations, cores)".
   The arguments stand for:
     -N: Number of qubits to which the unitary is applied.
     -depth: Depth of the used variational quantum circuit for SVD.
@@ -10,9 +10,12 @@
     -On ordered list of the learnt singular values.
     -A unitary operator that, applied to the "i-th" computational basis state, it brings it to the "i-th" learnt singular vector.
  
- ·In attack_svd_code.py the main function to be found is "Forgery_SVD(W_Haar, T, A, w)".
+ ·In attack_svd_code.py the most important function to be found is "Forgery_SVD(W_Haar, T, A, w)".
   The arguments stand for:
     -W_Haar: Unitary operator defining the QPUF that is going to be attacked.
     -T: Target size.
     -A: Ancilla size.
     -w: Paremeter deciding if SVD attack is launched (w=0), a random attacked is launched (w=1) or the user behaviour is simulated (w=2).
+  This fuction ouptuts:
+    -Asbsolute deviation between generation outcome to be forgered and the one obtained at verification. In a cyclyc fashion, that is, the 
+     largest possible outcome, "2^A-1", preceeds the very first one, "0". 
