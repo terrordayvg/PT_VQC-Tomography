@@ -5,5 +5,5 @@ Additionally, the repository was complemented with the 1 qubit code for state em
 
 To install all the basic packages, run:
 
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 
