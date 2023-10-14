@@ -1,8 +1,27 @@
-Main is main.py, in this file you compare the swap test with the compilation test.
+·Main is main.py, in this file you compare the swap test with the compilation test.
+ It calls:
+ main.Adam_QST    - output: Loss vector of CX_Swap, fidelity of CX_Swap
+ Cry_swap.py      - output: Loss vector of CRY_Swap, fidelity of CRY_Swap
+ Compare_W.py     - output: Loss vector of CRY_Vd, Loss vector of CX_Vd
 
-It calls:
-main.Adam_QST    - output: Loss vector of CX_Swap, fidelity of CX_Swap
-Cry_swap.py      - output: Loss vector of CRY_Swap, fidelity of CRY_Swap
-Compare_W.py     - output: Loss vector of CRY_Vd, Loss vector of CX_Vd
+·The most important function that can be found in qst_code.py is "QST(N, depth, iterations)".
+ It takes an input:
+  -N: The number of qubits of the targeted state.
+  -depth: The depth of the variational quantum circuit that is going to be built.
+  -iterations: Number of iterations used in the Adam subroutine.
+ It outpus, in this order:
+  -final_cost: The final value obtained for the cost function.
+  -thetas: The learnt parameters of the variational quantum circuit
+
+·The most important function to be found in attack_qst_code.py is "Forgery_QST(W_Haar, T, A, w, thetas)".
+ It takes, as an input:
+  -W_Haar: The unitary defining the QPUF to be attacked. A Haar-random one by default.
+  -T: Target size.
+  -A: Ancilla size.
+  -w: Parameter deciding if SVD attack is launched (w=0), a random attacked is launched (w=1) or the user behaviour is simulated (w=2).
+  -thetas: Learnt parameters for the variational quantum circuit.
+  This fuction ouptuts:
+    -Asbsolute deviation between generation outcome to be forgered and the one obtained at verification. In a cyclic fashion, that is, the 
+     largest possible outcome, "2^A-1", preceeds the very first one, "0". 
 
 
