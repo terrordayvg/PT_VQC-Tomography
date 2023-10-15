@@ -12,7 +12,7 @@ jobs:
           pkg-manager: pip
       - run:
           name: Run tests
-          command: python -m pytest.py
+          command: python pytest.py
       - persist_to_workspace:
           root: ~/project
           paths:
