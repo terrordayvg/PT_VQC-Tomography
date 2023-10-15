@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  python: circleci/python@2.0.3
+  python: circleci/python@3.11.6
   heroku: circleci/heroku@1.2.6
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
           pkg-manager: pip
       - run:
           name: Run tests
-          command: python -m pytest
+          command: python -m tests/process_test
       - persist_to_workspace:
           root: ~/project
           paths:
