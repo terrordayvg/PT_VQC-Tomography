@@ -1,27 +1,38 @@
 version: 2.1
 orbs:
-  browser-tools: circleci/browser-tools@1.2.3
+  python: circleci/python@2.0.3
+  heroku: circleci/heroku@1.2.6
+
 jobs:
-  build:
-    docker:
-    - image: cimg/python:3.10-browsers
+  build_and_test: # this can be any name you choose
+    executor: python/default
     steps:
-    - checkout
-    - browser-tools/install-browser-tools
-    - run:
-        name: Setup testing environment
-        command: |
-          pip install '.[test]' --user
-          echo $HOME
-    - run:
-        name: Run Tests
-        command: |
-          $HOME/.local/bin/coverage run -m pytest
-          $HOME/.local/bin/coverage report
-          $HOME/.local/bin/coverage html  # open htmlcov/index.html in a browser
-    - store_artifacts:
-        path: htmlcov
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          name: Run tests
+          command: python -m pytest
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+  deploy: # this can be any name you choose
+    executor: python/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - heroku/deploy-via-git:
+          force: true # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+
 workflows:
-  test-workflow:
+  test_my_app:
     jobs:
-    - build
+      - build_and_test
+      - deploy:
+          requires:
+            - build_and_test # only deploy if the build_and_test job has completed
+          filters:
+            branches:
+              only: main # only deploy when on main
