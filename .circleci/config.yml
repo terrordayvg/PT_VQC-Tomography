@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.0.3
   heroku: circleci/heroku@1.2.6
+  codecov: codecov/codecov@1.0.2
 
 jobs:
   build_and_test: # this can be any name you choose
@@ -12,7 +13,7 @@ jobs:
           pkg-manager: pip
       - run:
           name: Run tests
-          command: python -m tests/process_test
+      - codecov/upload:
       - persist_to_workspace:
           root: ~/project
           paths:
