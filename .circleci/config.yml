@@ -10,8 +10,7 @@ jobs:
       - checkout
       - run: python -m pip install --upgrade pip
       - sudo pip install -r requirements.txt
-      - python -m pytest --junitxml=junit/test-results.xml --cov=src
-report=html test/unit
+      - python -m pytest --junitxml=junit/test-results.xml --cov=src report=html test/unit
       -codecov/upload:
         file: coverage.xml
         flags: backend
