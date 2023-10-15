@@ -29,11 +29,11 @@ Usage
         - Classical DNN attack for QEPUF initialization reconstruction
         - Emulator 1D algorithm for state reconstruction based on: arXiv:1606.02734
 
-   In each folder:
+    In each folder:
         - A Comment.txt file explains the files hierarchy and objective with input and output functions
 
-   Tests:
-        - CircleCI covers up the continuous integration of the code and coverage of the basic functions.
+    Tests:
+        - CircleCI covers up the continuous integration of the code and coverage of the basic functions (.circleci folder).
 
 Contents of requirements.txt
 
