@@ -12,5 +12,5 @@ jobs:
       - checkout
       - run: npm install
       - run: npm test
-    codecov/upload:
-      file: coverage/*.json
+      codecov/upload:
+        file: coverage/*.json
