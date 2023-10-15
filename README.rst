@@ -11,8 +11,9 @@ pip install -r requirements.txt
 ``PT_VQC-Tomography`` - Generate attacks based on state tomography, process tomography and non-unitary process tomography
 =========================================================================================================================
 
-[![CircleCI](https://circleci.com/gh/circleci/PT_VQC-Tomography.svg?style=svg&circle-token=02f0948159c5d322121a83d58a40d3fb3dff73ec
-)](https://circleci.com/gh/circleci/PT_VQC-Tomography)
+
+.. image:: https://circleci.com/gh/circleci/PT_VQC-Tomography.svg?style=svg
+    :target: https://circleci.com/gh/circleci/PT_VQC-Tomography
 
 
 .. image:: https://img.shields.io/travis/bndr/pipreqs.svg
