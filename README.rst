@@ -1,4 +1,5 @@
 To install all the basic packages, run:
+----------------------------------------
 
 pip install -r requirements.txt
 
@@ -56,9 +57,21 @@ Contents of requirements.txt
 
 ::
 
-    wheel==0.23.0
-    Yarg==0.1.9
-    docopt==0.6.2
+        matplotlib==3.5.2
+        numpy==1.23.0
+        pandas==1.4.3
+        PennyLane==0.31.0
+        qiskit==0.39.4
+        qiskit_aer==0.11.2
+        qiskit_ibmq_provider==0.19.2
+        qiskit_ignis==0.7.1
+        qiskit_terra==0.22.3
+        qutip==4.7.1
+        scikit_learn==1.1.1
+        scipy==1.8.1
+        sympy==1.12
+        torch==1.12.0
+        tqdm==4.64.1
 
 What is PT_VQC?
 -------------------
