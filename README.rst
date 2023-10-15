@@ -7,9 +7,13 @@ To install all the basic packages, run:
 
 pip install -r requirements.txt
 
-=============================================================================
-``pipreqs`` - Generate requirements.txt file for any project based on imports
-=============================================================================
+=========================================================================================================================
+``PT_VQC-Tomography`` - Generate attacks based on state tomography, process tomography and non-unitary process tomography
+=========================================================================================================================
+
+[![CircleCI](https://circleci.com/gh/circleci/PT_VQC-Tomography.svg?style=svg&circle-token=02f0948159c5d322121a83d58a40d3fb3dff73ec
+)](https://circleci.com/gh/circleci/PT_VQC-Tomography)
+
 
 .. image:: https://img.shields.io/travis/bndr/pipreqs.svg
         :target: https://travis-ci.org/bndr/pipreqs
@@ -27,12 +31,12 @@ pip install -r requirements.txt
 
 
 
-Installation
+Installation of required libraries
 ------------
 
 ::
 
-    pip install pipreqs
+    install -r requirements.txt
 
 Usage
 -----
