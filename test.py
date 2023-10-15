@@ -7,7 +7,6 @@ def test_dec_to_bin(): #From decimal to binary N-bits string.
   x=5
   N=3
   res=po.dec_to_bin(x,N)
-  assertEqual(res, "101")
+  assert res== [1,0,1]
   
-if __name__ == '__main__':
-   test_dec_to_bin()
+
