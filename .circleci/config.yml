@@ -11,8 +11,6 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: pip
-      - run:
-          name: Run tests
       - codecov/upload:
       - persist_to_workspace:
           root: ~/project
