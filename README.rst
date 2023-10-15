@@ -1,8 +1,3 @@
-# PT_VQC-Tomography
-This repository combines all the codes to produce the plots and results from the following article: -----
-A classical DNN attack has also been included, with the objective of recreating the initial state vector of each user based on the post-measurement classical output in QEPUF.
-Additionally, the repository was complemented with the 1 qubit code for state emulation from the work of arXiv:1606.02734.
-
 To install all the basic packages, run:
 
 pip install -r requirements.txt
@@ -14,18 +9,6 @@ pip install -r requirements.txt
 
 .. image:: https://dl.circleci.com/status-badge/img/circleci/5ZWV663xqw4uDT8KDmJgpW/G4piVvQ66XDUHGX4Az1BJj/tree/circleci-project-setup.svg?style=shield&circle-token=41de148cb83684dd3c53509e74c3048071434118
         :target: https://dl.circleci.com/status-badge/redirect/circleci/5ZWV663xqw4uDT8KDmJgpW/G4piVvQ66XDUHGX4Az1BJj/tree/circleci-project-setup
-
-
-.. image:: https://img.shields.io/pypi/v/pipreqs.svg
-        :target: https://pypi.python.org/pypi/pipreqs
-
-
-.. image:: https://codecov.io/gh/bndr/pipreqs/branch/master/graph/badge.svg?token=0rfPfUZEAX
-        :target: https://codecov.io/gh/bndr/pipreqs
-
-.. image:: https://img.shields.io/pypi/l/pipreqs.svg
-        :target: https://pypi.python.org/pypi/pipreqs
-
 
 
 Installation of required libraries
@@ -68,13 +51,6 @@ Usage
                               <gt>     | e.g. Flask>=1.1.2
                               <no-pin> | e.g. Flask
 
-Example
--------
-
-::
-
-    $ pipreqs /home/project/location
-    Successfully saved requirements file in /home/project/location/requirements.txt
 
 Contents of requirements.txt
 
@@ -84,9 +60,9 @@ Contents of requirements.txt
     Yarg==0.1.9
     docopt==0.6.2
 
-Why not pip freeze?
+What is PT_VQC?
 -------------------
 
-- ``pip freeze`` only saves the packages that are installed with ``pip install`` in your environment.
-- ``pip freeze`` saves all packages in the environment including those that you don't use in your current project (if you don't have ``virtualenv``).
-- and sometimes you just need to create ``requirements.txt`` for a new project without installing modules.
+This repository combines all the codes to produce the plots and results from the following article: -----
+A classical DNN attack has also been included, with the objective of recreating the initial state vector of each user based on the post-measurement classical output in QEPUF.
+Additionally, the repository was complemented with the 1 qubit code for state emulation from the work of arXiv:1606.02734.
