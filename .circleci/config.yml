@@ -9,7 +9,5 @@ jobs:
           name: The First Step
           orbs:
                codecov/codecov@3.2.4
-          command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
+          
 
