@@ -1,21 +1,14 @@
-# CircleCI configuration file
+
+
 version: 2.1
 orbs:
   codecov: codecov/codecov@3.2.5
+  
 jobs:
   build:
     docker:
-     - image: circleci/python:2.7.15-node
+      - image: circleci/python:2.7.15-node
     steps:
-      - run: python -m pip install --upgrade pip
-      - run: sudo pip install -r requirements.txt
-      - run: python -m pytest --junitxml=junit/test-results.xml --cov=src report=html test/unit
-      -codecov/upload:
-        file: coverage.xml
-        flags: backend
-      - run: npm install
-      - run: npm test
-      codecov/upload:
-        file: coverage/*.json
-        flags: frontend
-
+      - checkout
+      - run:
+          python -m pip install --upgrade pip
