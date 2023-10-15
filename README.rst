@@ -32,6 +32,9 @@ Usage
    In each folder:
         - A Comment.txt file explains the files hierarchy and objective with input and output functions
 
+   Tests:
+        - CircleCI covers up the continuous integration of the code and coverage of the basic functions.
+
 Contents of requirements.txt
 
 ::
