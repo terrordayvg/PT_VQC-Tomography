@@ -1,7 +1,11 @@
-orbs: # declare what orbs we are going to use
-  node: circleci/node@3.0.1 # the node orb provides common node-related configuration
-  codecov: codecov/codecov@3.2.3
-
-version: 2.1 # using 2.1 provides access to orbs and other features
-
+version: '2.1'
+orbs:
+  codecov: codecov/codecov@3.2.5
+  node: circleci/node@4.7.0
+workflows:
+  upload-to-codecov:
+    jobs:
+      - node/test:
+          post-steps:
+            - codecov/upload
 
