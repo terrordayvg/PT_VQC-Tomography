@@ -12,8 +12,8 @@ pip install -r requirements.txt
 =========================================================================================================================
 
 
-.. image:: https://circleci.com/gh/circleci/PT_VQC-Tomography.svg?style=svg
-    :target: https://circleci.com/gh/circleci/PT_VQC-Tomography
+.. image:: https://dl.circleci.com/status-badge/img/circleci/5ZWV663xqw4uDT8KDmJgpW/G4piVvQ66XDUHGX4Az1BJj/tree/main.svg?style=svg
+        :target: https://dl.circleci.com/status-badge/redirect/circleci/5ZWV663xqw4uDT8KDmJgpW/G4piVvQ66XDUHGX4Az1BJj/tree/main
 
 
 .. image:: https://img.shields.io/travis/bndr/pipreqs.svg
