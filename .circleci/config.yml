@@ -2,25 +2,22 @@
 version: 2.1
 orbs:
   codecov: codecov/codecov@3.2.5
- 
 jobs:
-  # Job one with a unique name
-  say_hello:
+  build:
     docker:
-     - image: cimg/base:2022.05
+     - image: circleci/python:2.7.15-node
     steps:
-      - run: echo "Say hello to YAML!"
-  # Job two with a unique name
-  say_goodbye:
-    docker:
-     - image: cimg/base:2022.05
-    steps:
-      - run: echo "Say goodbye to YAML!"
+      - checkout
+      - run: python -m pip install --upgrade pip
+      - sudo pip install -r requirements.txt
+      - python -m pytest --junitxml=junit/test-results.xml --cov=src
+report=html test/unit
+      -codecov/upload:
+        file: coverage.xml
+        flags: backend
+      - run: npm install
+      - run: npm test
+      codecov/upload:
+        file: coverage/*.json
+        flags: frontend
 
-workflows:
-  # Name of workflow
-  hello_and_goodbye:
-    # List of jobs that will run
-    jobs:
-      - say_hello
-      - say_goodbye
