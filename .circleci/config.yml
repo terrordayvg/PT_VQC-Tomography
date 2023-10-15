@@ -12,7 +12,7 @@ jobs:
       - python/install-packages:
           pkg-manager: pip
       - codecov/upload:
-        file: {{ coverage_report_filepath }}
+        file: ~/project/test/process_test.py
       - persist_to_workspace:
           root: ~/project
           paths:
