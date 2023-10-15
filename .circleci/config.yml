@@ -1,8 +1,8 @@
-version: 2.1
+version: '2.1'
 orbs:
-  codecov: codecov/codecov@1.0.2
-jobs:
-  build:
-    steps:
-      - codecov/upload:
-          file: {{ coverage_report_filepath }}
+  codecov: codecov/codecov@3.2.5
+workflows:
+  codecov:
+    jobs:
+      - checkout
+      - codecov/upload
