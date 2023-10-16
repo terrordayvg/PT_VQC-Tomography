@@ -1,9 +1,0 @@
-DNN tomography:
-===================================================
-
-Objective, reconstruction of RY(angles) (ignoring phase reconstruction for now)
-for unique initialization for a specific user using a QPUF.
-
-- Go to run_test_harness() function and change the parameters, workers=#clusters used, training_set_dim and test_set_dim.
-- In the end a confunsion matrix and cross entropy is also presented in terms of epoch evolution. (this has not been generalized yet for n qubits - change manually)
-
