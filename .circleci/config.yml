@@ -7,10 +7,6 @@ orbs:
 jobs:
   test_manager: # this can be any name you choose
     executor: python/default
-    parameters:
-      description: Token for circleci to codecov integration
-      type: env_var_name
-      default: CODECOV_TOKEN
     steps:
       - checkout
       - python/install-packages:
