@@ -7,6 +7,10 @@ orbs:
 jobs:
   test_manager: # this can be any name you choose
     executor: python/default
+    parameters:
+      description: Token for circleci to codecov integration
+      type: env_var_name
+      default: CODECOV_TOKEN
     steps:
       - checkout
       - python/install-packages:
@@ -16,7 +20,7 @@ jobs:
           command: python -m pytest Process_tomography/test.py -v --junitxml="result.xml" #python Process_tomography/test.py
       - codecov/upload:
           file: '/home/circleci/project/result.xml'
-          token: 43e6c4b8-2552-434c-8ec0-c2bbdc679485
+          token: CODECOV_TOKEN
             
                 
           
