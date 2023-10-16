@@ -7,7 +7,7 @@
         :target: https://dl.circleci.com/status-badge/redirect/circleci/5ZWV663xqw4uDT8KDmJgpW/G4piVvQ66XDUHGX4Az1BJj/tree/circleci-project-setup
 
 .. image:: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography/graph/badge.svg?token=880RTY0T96
-:target: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography
+        :target: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography
 
 Installation of required libraries
 ------------
