@@ -54,6 +54,7 @@ Contents of requirements.txt
         sympy==1.12
         torch==1.12.0
         tqdm==4.64.1
+        pytest==7.4.2
 
 
 What is PT_VQC?
