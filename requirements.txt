@@ -13,4 +13,5 @@ scipy==1.8.1
 sympy==1.12
 torch==1.12.0
 tqdm==4.64.1
+pytest==7.4.2
 
