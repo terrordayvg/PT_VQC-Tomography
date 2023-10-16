@@ -1,1 +1,2 @@
-
+DNN_QPUF_Initialization.py file uses classical DNN to perform an attack the users initialization reconstruction of the QEPUF.
+----------------------------------
