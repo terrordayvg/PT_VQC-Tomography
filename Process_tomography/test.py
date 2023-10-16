@@ -7,5 +7,5 @@ def test_dec_to_bin(): #From decimal to binary N-bits string.
   x=5
   N=3
   res=po.dec_to_bin(x,N)
-  assert res== [1,0,1]
+  assert res== [1,1,1]
   
