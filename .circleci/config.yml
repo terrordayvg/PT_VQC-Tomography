@@ -13,8 +13,7 @@ jobs:
           pkg-manager: pip
       - run:
           name: Run tests
-          command: python Process_tomography/test.py
-          
+          command: python -m pytest Process_tomography/test.py -v --junitxml="result.xml" #python Process_tomography/test.py
       - codecov/upload:
           file: "/Process_tomography/coverage.xml"
           
