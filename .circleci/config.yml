@@ -17,7 +17,7 @@ jobs:
       - codecov/upload:
           file: "/home/circleci/project/result.xml"
           token: 43e6c4b8-2552-434c-8ec0-c2bbdc679485
-                type: env_var_name
+            type: env_var_name
                 
           
       - persist_to_workspace:
