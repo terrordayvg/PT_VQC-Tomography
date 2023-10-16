@@ -11,6 +11,8 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: pip
+      - codecov/upload:
+          file: {{~/project}}
       - run:
           name: Run tests
           command: python Process_tomography/test.py
