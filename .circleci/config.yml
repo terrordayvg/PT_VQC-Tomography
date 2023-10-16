@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   python: circleci/python@2.0.3
-  codecov: codecov/codecov@3.2.5
+  codecov: codecov/codecov@3.2.4
   
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
           name: Run tests
           command: python -m pytest Process_tomography/test.py -v --junitxml="result.xml" #python Process_tomography/test.py
       - codecov/upload:
-          file: "/home/circleci/project/result.xml"
+          file: '/home/circleci/project/result.xml'
           token: 43e6c4b8-2552-434c-8ec0-c2bbdc679485
             
                 
