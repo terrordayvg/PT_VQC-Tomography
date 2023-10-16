@@ -16,7 +16,7 @@ jobs:
           command: python -m pytest Process_tomography/test.py -v --junitxml="result.xml" #python Process_tomography/test.py
       - codecov/upload:
           file: "/home/circleci/project/result.xml"
-          token: 43e6c4b8-2552-434c-8ec0-c2bbdc679485
+          token: "43e6c4b8-2552-434c-8ec0-c2bbdc679485"
           
       - persist_to_workspace:
           root: ~/project
