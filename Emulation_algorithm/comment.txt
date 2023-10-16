@@ -1,0 +1,2 @@
+Emulation algorithm based on: arXiv:1910.02126v4 [quant-ph] 2 Jun 2021
+The emulator runs for q=1, for same output state reconstruction.
