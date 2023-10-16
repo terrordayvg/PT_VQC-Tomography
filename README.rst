@@ -11,6 +11,10 @@
 .. image:: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography/graph/badge.svg?token=880RTY0T96
         :target: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography
 
+.. image:: https://img.shields.io/badge/python-3.11-blue.svg
+        :target: https://www.python.org/downloads/release/python-3110/
+
+
 Installation of required libraries
 ------------
 
