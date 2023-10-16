@@ -15,7 +15,7 @@ jobs:
           name: Run tests
           command: python -m pytest Process_tomography/test.py -v --junitxml="result.xml" #python Process_tomography/test.py
       - codecov/upload:
-          file: "/Process_tomography/result.xml"
+          file: "~/project/result.xml"
           
       - persist_to_workspace:
           root: ~/project
