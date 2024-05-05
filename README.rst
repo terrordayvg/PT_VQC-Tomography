@@ -16,14 +16,12 @@
 
 
 Installation of required libraries
-------------
 
 ::
 
     install -r requirements.txt
 
 Usage
------
 
 ::
 
