@@ -1,5 +1,5 @@
 =========================================================================================================================
-``PT_VQC-Tomography`` - Generate attacks based on state tomography, process tomography and non-unitary process tomography
+``PT_VQC and U-VQSVD Tomography`` - Generate attacks based on state tomography, process tomography and non-unitary process tomography
 =========================================================================================================================
 
 
