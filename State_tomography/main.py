@@ -824,7 +824,6 @@ def plot_loss(loss,Loss_cry,Loss_cx,depth,size,ites):
     plt.plot(Loss_cry,label='Cost_Loss_cry_Vd')
     plt.plot(Loss_cx,label='Cost_Loss_cx_Vd')
 
-	#plt.savefig('C:/Users/vladl/Documents/PHD/Simulations/Qiskit-Simulations/SECURITY/Modified_Pol/'+'CX'+str(depth)+"_"+str(size)+"_"+str(ites)+'.png', bbox_inches='tight') #If you want to save the circuit
     plt.legend()
     plt.show()
 
@@ -835,7 +834,6 @@ def plot_loss2(losscx2,losscry2,Loss_cry,Loss_cx,depth,size,ites):
     plt.plot(Loss_cry,label='Cost_Loss_cry_Vd')
     plt.plot(Loss_cx,label='Cost_Loss_cx_Vd')
 
-    #plt.savefig('C:/Users/vladl/Documents/PHD/Simulations/Qiskit-Simulations/SECURITY/Modified_Pol/'+'CX'+str(depth)+"_"+str(size)+"_"+str(ites)+'.png', bbox_inches='tight') #If you want to save the circuit
     plt.legend()
     plt.show()
 
@@ -852,7 +850,6 @@ def plot_loss_simple(loss,depth,size,ites,Fidd,loss2,Fidd2):
     plt.plot(Fidd2,label='Fidelity of depth 2')
 
 
-    #plt.savefig('C:/Users/vladl/Documents/PHD/Simulations/Qiskit-Simulations/SECURITY/Modified_Pol/'+'CX'+str(depth)+"_"+str(size)+"_"+str(ites)+'.png', bbox_inches='tight') #If you want to save the circuit
     plt.legend()
     plt.show()
 
