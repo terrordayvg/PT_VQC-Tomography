@@ -32,8 +32,6 @@ import Cry_swap   #CRY_swap losses and fidelity
 import mult_m
 #We will create a function which does initialization and will have the same seed as for here
 
-
-
 depth = 10      #Layer depth
 size = 3       #Qubit size of psi
 ites = 10       #Epoc1
@@ -234,7 +232,7 @@ def create__ansatz2(qc: qiskit.QuantumCircuit,
     return qc
 
 
-#Block 
+#Block definition
 def create_block(qc: qiskit.QuantumCircuit, thetas: np.ndarray,thetas2: np.ndarray,size:float):
 
     #print(thetas,thetas2)
@@ -302,27 +300,9 @@ def comp_create_ansatz(qc: qiskit.QuantumCircuit,
     n = size
 
     for i in range(0, num_layers):
-        # 3 turn into 4
         phis = thetas
-        #print("Phis:")
-        #print(phis)
-        #print("")
         qc = comp_create_block(qc, phis[n*3*i:n*3*i+n], phis[n*3*i+n:n*3*i+2*n],phis[n*3*i+2*n:n*3*i+3*n],size)
-    #print(" ")
-        #qc.barrier()
-        #qc = create_rz_nqubit(qc, phis[n:n * 2])
-        #qc = create_rx_nqubit(qc, phis[n * 2:n * 3])
-        #qc = create_rz_nqubit(qc, phis[n * 3:n * 4])
-        #print(qc)
-
-    #thetas3=phis[len(thetas)-n:len(thetas)]
-
-    #Last layer is a rx
-    #count=0
-    #for j in range(size):
-    #    qc.rx(thetas3[count], j)
-    #    count=count+1
-    #qc.barrier()
+  
     return qc
 
 
@@ -339,21 +319,12 @@ def create__ansatz(qc: qiskit.QuantumCircuit,
     n = size
 
     for i in range(0, num_layers):
-        # 3 turn into 4
         phis = thetas
-        #print("Phis:")
-        #print(phis)
-        #print("")
         qc = create_block(qc, phis[n*2*i:n*2*i+n], phis[n*2*i+n:n*2*i+2*n],size)
-    #print(" ")
-        #qc.barrier()
-        #qc = create_rz_nqubit(qc, phis[n:n * 2])
-        #qc = create_rx_nqubit(qc, phis[n * 2:n * 3])
-        #qc = create_rz_nqubit(qc, phis[n * 3:n * 4])
-        #print(qc)
+
 
     thetas3=phis[len(thetas)-n:len(thetas)]
-
+				       
     #Last layer is a rx
     count=0
     for j in range(1+size,1+size*2):
@@ -376,14 +347,6 @@ def circuit_update(thetas, depth, size):
     qc = QuantumCircuit(q, c)
     #Define Haar target 
     lista = []
-	##for i in range(size):
-	##	lista.append(q[1+i])
-    #cost_circuit.unitary(U_Haar, lista)
-    #Define GHZ target
-	##qc.h(1)
-	
-	##for y in range(size-1):
-	##	qc.cnot(1, 2+y)
     a=np.arange(1,size+1)
     At=a.tolist()
     qc.append(CH, At)
@@ -413,19 +376,10 @@ def cost(thetas, depth, size):
 	qc = QuantumCircuit(q, c)
     #Define Haar target 
 	lista = []
-	##for i in range(size):
-	##	lista.append(q[1+i])
-    #cost_circuit.unitary(U_Haar, lista)
-    #Define GHZ target
-	##qc.h(1)
-	
-	##for y in range(size-1):
-	##	qc.cnot(1, 2+y)
 	a=np.arange(1,size+1)
 	At=a.tolist()
 	qc.append(CH, At)
 
-    #print(qc)
     #Create variational part
 	qc = create__ansatz2(qc, thetas, size,depth)
     
@@ -551,6 +505,7 @@ def split_into_layers(qc: qiskit.QuantumCircuit):
             else:
                 is_param_layer = True
         # New layer's condition: depth increase or convert from non-parameterized layer to parameterized layer or vice versa
+	    
         if is_gate_in_list_wires(gate, wires) or (is_param_layer == False and len(param) != 0) or (is_param_layer == True and len(param) == 0):
             if is_param_layer == False:
                 # First field is 'Is parameterized layer or not?'
@@ -560,6 +515,7 @@ def split_into_layers(qc: qiskit.QuantumCircuit):
             layer = []
             wires = []
         # Update sub-layer status
+	    
         if len(param) == 0 or name == 'state_preparation_dg':
             is_param_layer = False
         else:
@@ -568,6 +524,7 @@ def split_into_layers(qc: qiskit.QuantumCircuit):
             wires.append(w)
         layer.append((name, param, wire))
     # Last sub-layer
+	
     if is_param_layer == False:
         # First field is 'Is parameterized layer or not?'
         layers.append((False, layer))
@@ -611,22 +568,14 @@ def grad_loss(qc: QuantumCircuit,
 
     #This function tells you about the gates used and the type of phase shift rule to be used 2term or 4term if single or control gate
 	index_list=np.zeros(len(thetas))
-    #print(size)
 	for gate in qc.data:#
-		#print(gate[0].name,gate[0].params)#if(str(gate[1])=="[Qubit(QuantumRegister("+str(1+size*2)+", 'q'), "+str(size+1)+")]"or str(gate[1])=="[Qubit(QuantumRegister("+str(1+size*2)+", 'q'), "+str(size+2)+")]" or str(gate[1])=="[Qubit(QuantumRegister("+str(1+size*2)+", 'q'), "+str(size+3)+")]"):
 		if(gate[0].name=="rx" or gate[0].name=="ry" or gate[0].name=="rz"):
 			index_list[count]=0
 			count=count+1
 		elif(gate[0].name=="crx" or gate[0].name=="cry" or gate[0].name=="crz"):
 			index_list[count]=1
 			count=count+1
-   ## index_list = get_cry_index(thetas,depth,size)
-	grad_loss = np.zeros(len(thetas))#
-
-    #print(index_list)
-	#print("Index_list")
-	#print(index_list)
-    #print(index_list)
+	grad_loss = np.zeros(len(thetas))
 	for i in range(0, len(thetas)):
 		if index_list[i] == 0:
 			grad_loss[i] = single_2term_psr(qc, thetas,size,depth,
@@ -775,16 +724,8 @@ def Adam_QST2(depth, size, ites):
     v_hat = np.zeros(depth*size*3)
     thetas = np.ones(depth*size*3) #Parameters to be trained
     loss_values=[] #values for the loss
-    
-    #print("Thetas init -----------------------------------------------")
-    #print(thetas)
-
-    #Initialization
-    #for i in range(depth*size*2+size):
-    #    thetas[i]= np.random.uniform(0, 2 * np.pi)
         
     diff = np.pi/2
-    #print(size,depth)
     vdagger = circuit_update2(thetas, depth, size) #Create the first structure of the quantum circuit
     print("CNOT_Normal:")
     print(vdagger)
@@ -812,9 +753,7 @@ def Adam_QST2(depth, size, ites):
 
         runtime2 = time() - runtime
         print("Step " + str(i) + ": " + str(loss)+"| Time: "+str(runtime2))
-                                                                              
-                            
-    
+                                                                                    
     return loss_values
 
 def plot_loss(loss,Loss_cry,Loss_cx,depth,size,ites):
@@ -843,7 +782,6 @@ def plot_loss_simple(loss,depth,size,ites,Fidd,loss2,Fidd2):
     for d in range(depth):
         plt.plot(loss[d],label='Cost_Loss_cx_swap_depth '+str(d))
 
-
     plt.plot(Fidd,label='Fidelity of cut depth ')
 
     plt.plot(loss2,label='Cost_Loss_cx_depth_2 '+str(d))
@@ -863,10 +801,8 @@ losscx2,Fidd=mult_m.Adam_QST(depth, size, ites)
 #Loss_parl_cx=Parl_swap.Adam2_QST(depth, size, ites)
 loss2,Fidd2=Adam_QST(depth, size, ites)
 
-print("")
 print("Starting swap test...")
 #losscx2,Fidd=mult_m.Adam_QST(depth, size, ites)
-print("------------------")
 #loss2,Fidd2=Adam_QST(depth, size, ites)
 plot_loss_simple(losscx2,depth,size,ites,Fidd,loss2,Fidd2)
 
