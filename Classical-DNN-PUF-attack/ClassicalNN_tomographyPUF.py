@@ -412,41 +412,29 @@ def Test_reference(ci):
     for counting_qubit in range(3):
         for j in range(repetitions):
             qpe2.append(CHar3, [counting_qubit,3,4,5])
- #          qpe2.cp(angle, counting_qubit, 5+counting_qubit);
         repetitions *= 2
 
 
-            
-#       for counting_qubit in range(5):
-##          qpe2.append(gate4x4, [5+counting_qubit, counting_qubit])
-#       qpe2.append(gate4x4, [5,6,7,8,9,0,1,2,3,4])
-        
     qft_dagger(qpe2,3)
     #print("here6")
 
 
-    qpe2.measure([0,1,2],[0,1,2]) ################################################## O que sai daqui devia de ser o mesmo que se fizessemos o measurement de no marginal - for some reason that's not the case.
+    qpe2.measure([0,1,2],[0,1,2]) 
 
     qpe2.reset([0,1,2])
 
     for qubit in range(3):
         qpe2.h(qubit)
 
-    #           print("here6")
-                
-    #           print("here7")
-    #           for counting_qubit in range(5):
-    #               qpe2.append(gate4x4, [5+counting_qubit, counting_qubit])
+ 
     repetitions = 1
     for counting_qubit in range(3):
         for i in range(repetitions):
             qpe2.append(CHar3, [counting_qubit,3,4,5])
-    #                   qpe2.append(gate4x4, [5+counting_qubit,counting_qubit])
-#                       qpe2.cp(angle, counting_qubit, 5+counting_qubit);
+
         repetitions *= 2
                 
-    #           qpe2.append(gate4x4, [5,6,7,8,9,0,1,2,3,4])
-    #           print("here8")
+
     qft_dagger(qpe2,3)
 
 
@@ -534,41 +522,24 @@ def Reference(seedV,dim_ancilla):
     CHar3 = add_control(CHar2,1, ctrl_state=1,label="CHar")
 
 
-        
-
-        
-
-
     for qubit in range(3):
         qpe2.h(qubit)
-
-
 
     repetitions=1
     for counting_qubit in range(3):
         for j in range(repetitions):
             qpe2.append(CHar3, [counting_qubit,3,4,5])
- #          qpe2.cp(angle, counting_qubit, 5+counting_qubit);
         repetitions *= 2
 
-
-            
-#       for counting_qubit in range(5):
-##          qpe2.append(gate4x4, [5+counting_qubit, counting_qubit])
-#       qpe2.append(gate4x4, [5,6,7,8,9,0,1,2,3,4])
         
     qft_dagger(qpe2,3)
     #print("here6")
 
 
-    qpe2.measure([0,1,2],[0,1,2]) ################################################## O que sai daqui devia de ser o mesmo que se fizessemos o measurement de no marginal - for some reason that's not the case.
+    qpe2.measure([0,1,2],[0,1,2]) ################################
 
 ######################################################## Verification 1 ####################################################################
 
-
-
-
-    
     #sim_toro = Aer.get_backend('aer_simulator')
     #sim_toro = AerSimulator.from_backend(device_backend)
 
@@ -577,7 +548,6 @@ def Reference(seedV,dim_ancilla):
 
    # t_qpe2 = transpile(qpe2, sim_toro,seed_transpiler=42)
 
-# ------------------------------------------------ Backend and simulator executable --------------------------------------------------- 
     aer_sim = Aer.get_backend('aer_simulator')
     t_qpe2 = transpile(qpe2, aer_sim, seed_transpiler=42)
     result2 = aer_sim.run(t_qpe2,shots=shots).result()
@@ -595,8 +565,6 @@ def Reference(seedV,dim_ancilla):
             prob[z]=0
 
 
-
-        
     counts = np.array(list(result.values()))
     states = np.array(list(result.keys())).astype(float)
         
@@ -611,8 +579,6 @@ def Reference(seedV,dim_ancilla):
     X_l[0]=on
     X_l[1]=on2
     X_l[2]=on3    
-
-    ########################################################## Verification code #######################################################
 
 
 ######################################################## CIRCUIT ####################################################################
@@ -631,51 +597,33 @@ def Reference(seedV,dim_ancilla):
     qpe2.ry(on3,5)
 
 
-
     for qubit in range(3):
         qpe2.h(qubit)
-
 
 
     repetitions=1
     for counting_qubit in range(3):
         for j in range(repetitions):
             qpe2.append(CHar3, [counting_qubit,3,4,5])
- #          qpe2.cp(angle, counting_qubit, 5+counting_qubit);
         repetitions *= 2
-
-
-            
-#       for counting_qubit in range(5):
-##          qpe2.append(gate4x4, [5+counting_qubit, counting_qubit])
-#       qpe2.append(gate4x4, [5,6,7,8,9,0,1,2,3,4])
         
     qft_dagger(qpe2,3)
-    #print("here6")
 
 
-    qpe2.measure([0,1,2],[0,1,2]) ################################################## O que sai daqui devia de ser o mesmo que se fizessemos o measurement de no marginal - for some reason that's not the case.
+    qpe2.measure([0,1,2],[0,1,2]) 
 
     qpe2.reset([0,1,2])
 
     for qubit in range(3):
         qpe2.h(qubit)
 
-    #           print("here6")
-                
-    #           print("here7")
-    #           for counting_qubit in range(5):
-    #               qpe2.append(gate4x4, [5+counting_qubit, counting_qubit])
     repetitions = 1
     for counting_qubit in range(3):
         for i in range(repetitions):
             qpe2.append(CHar3, [counting_qubit,3,4,5])
-    #                   qpe2.append(gate4x4, [5+counting_qubit,counting_qubit])
-#                       qpe2.cp(angle, counting_qubit, 5+counting_qubit);
+
         repetitions *= 2
-                
-    #           qpe2.append(gate4x4, [5,6,7,8,9,0,1,2,3,4])
-    #           print("here8")
+
     qft_dagger(qpe2,3)
 
 
@@ -692,8 +640,6 @@ def Reference(seedV,dim_ancilla):
         finalm = results.get_counts()
     
 
-
-    #print(qis_seed,finalm,simp_counts1)
 
         for l in range(8):
             num=decimalToBinary(l)
@@ -723,7 +669,6 @@ def Data_creation(dim_ancilla,pow_a,sizextr,sizex,workers):
     args = [qis_seed[i] for i in range(sizex)]
 
     print("Test data generation:")
-    
     print("-------------------------------------------")
 
     end1 = time()
@@ -753,14 +698,8 @@ def Data_creation(dim_ancilla,pow_a,sizextr,sizex,workers):
         for j in range(dim_ancilla):
             Y_t[i][j]=result[i][1][0][j]
 
-    print("X_t:")
     
-
-    print("Y_t:")
-    
-
     print("Size of result:")
-    #print(len(result))
 
     qis_seed2=np.arange(off_set,off_set+sizextr)
     args = [qis_seed2[i] for i in range(sizextr)]
@@ -805,9 +744,6 @@ def Data_creation(dim_ancilla,pow_a,sizextr,sizex,workers):
 
     print("Size of result:")
     print(len(result2))
-
-
-
 
     #X_tr,Y_tr=QuantumCircuit2(X_train)
 
@@ -1071,9 +1007,7 @@ def run_test_harness():
 
     cm2 = confusion_matrix(np.argmax(CYdec2, axis=1), np.argmax(PCYdec2, axis=1))
 
-    #cm3 = confusion_matrix(np.argmax(CYdec3, axis=1), np.argmax(PCYdec3, axis=1))
 
-#    cm4 = confusion_matrix(np.argmax(CYdec4, axis=1), np.argmax(PCYdec4, axis=1))
     
 
     n_class=np.arange(0,csize)
@@ -1084,14 +1018,11 @@ def run_test_harness():
     mu=0
     mu1=1
     mu2=2
-    #mu3=3
-    #mu4=4
 
     plot_confusion_matrix(mu,cm0, n_classp)
     plot_confusion_matrix(mu1,cm1, n_classp)
     plot_confusion_matrix(mu2,cm2, n_classp)
-    #plot_confusion_matrix(mu3,cm3, n_classp)
-    #plot_confusion_matrix(mu4,cm4, n_classp)
+   
 
 
     # Multivariative ROC curve; 
