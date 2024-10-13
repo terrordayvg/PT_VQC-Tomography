@@ -21,29 +21,28 @@ Installation of required libraries
 
     install -r requirements.txt
 
+
 Usage
 
-::
+               PT_VQC is divided into 3 distinct folders, responsible for:
+        
+        Folders:  
+                * `State tomography`.
+                * `Process tomography`.
+                * `Non-unitary process tomography`
 
-    Usage:
-        PT_VQC is divided into 3 distinct folders, responsible for:
-        - State tomography
-        - Process tomography
-        - Non-unitary process tomography
+                
+        Aditional: 
+                * `Classical Deep Neural Network (DNN) attack for QEPUF initialization reconstruction`.
 
-        Additionally: 2 folders added:
-        - Classical DNN attack for QEPUF initialization reconstruction
-        - Emulator 1D algorithm for state reconstruction based on: arXiv:1606.02734
+        Tests:
+                * CircleCI is integrated for tests (.circleci folder).
 
-    In each folder:
-        - A Comment.txt file explains the files hierarchy and objective with input and output functions
-
-    Tests:
-        - CircleCI covers up the continuous integration of the code and coverage of the basic functions (.circleci folder).
 
 Contents of requirements.txt
+-----
 
-::
+::     
 
         matplotlib==3.5.2
         numpy==1.23.0
