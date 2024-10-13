@@ -33,7 +33,7 @@ Usage
 
                 
         Aditional: 
-                * `Classical Deep Neural Network (DNN) attack for QEPUF initialization reconstruction`.
+                * `Classical Deep Neural Network (DNN) attack for QEPUF initialization reconstruction (Classical-DNN-PUF-attack)`.
 
         Tests:
                 * CircleCI is integrated for tests (.circleci folder).
