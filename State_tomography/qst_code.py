@@ -61,8 +61,6 @@ def cost(thetas, depth, N): #Computation of the cost function
         frequency = results.get_counts()['1'] / shots 
     except:
         frequency = 0
-    else:
-        frequency = results.get_counts()['1'] / shots 
     if frequency > 0.49:
         frequency = 0.49
     overlap = np.sqrt(1 - 2 * frequency)
