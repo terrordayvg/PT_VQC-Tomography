@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 import numpy as np
 import sys, os
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import HGate
 
@@ -65,4 +65,5 @@ def test_vqc_qst_integration(setup_small):
     N, depth, qc, thetas = setup_small
     out_circ = qst_code.vqc_qst(depth, qc.copy(), thetas, N, 0)
     assert isinstance(out_circ, QuantumCircuit)
+
     assert out_circ.num_qubits >= N #Circuit should have enough qubits
