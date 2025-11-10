@@ -65,5 +65,5 @@ Contents of requirements.txt
 
 What is PT_VQC?
 -------------------
-This repository combines all the codes to produce the plots and results from the following article: arXiv:2404.16541, if used, cite it correspondently. 
+This repository generates the PT-VQC and U-VQSVD codes for process tomography the full article is listed at New J. Phys. 26 073017, if used, cite it correspondently. 
 
