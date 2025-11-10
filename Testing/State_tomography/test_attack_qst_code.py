@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 import numpy as np
 import sys, os
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import HGate
 from qiskit.quantum_info import random_unitary
@@ -92,4 +92,5 @@ def test_QPUF_builds_expected_circuit_structure():
 
     # Ensure the number of classical bits matches expectation
     assert out_circuit.num_clbits == dc
+
     assert out_circuit.num_qubits == dq
