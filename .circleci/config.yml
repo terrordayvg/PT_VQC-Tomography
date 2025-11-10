@@ -5,11 +5,11 @@ orbs:
 
 jobs:
   test_manager:
-    executor: python/default
+    executor:
+      name: python/python
+      python-version: "3.10"   # <-- specify Python version here
     steps:
       - checkout
-      - python/setup:
-          python-version: "3.10"   # <-- set Python version here
       - python/install-packages:
           pkg-manager: pip
       - run:
