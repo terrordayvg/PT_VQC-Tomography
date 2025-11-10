@@ -35,8 +35,9 @@ Usage
         Aditional: 
                 * `Classical Deep Neural Network (DNN) attack for QEPUF initialization reconstruction (Classical-DNN-PUF-attack)`.
 
-        Tests:
-                * CircleCI is integrated for tests (.circleci folder).
+        Tests:  
+                * Pytest in Test folder, for all major functions in the codes.
+                * CircleCI is integrated for continuous integration (.circleci folder).
 
 
 Contents of requirements.txt
