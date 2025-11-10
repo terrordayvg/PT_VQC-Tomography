@@ -3,11 +3,12 @@
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 import qiskit.quantum_info as qi
-from qiskit import ClassicalRegister, QuantumRegister, execute
+from qiskit import ClassicalRegister, QuantumRegister
+
 from qiskit.circuit.add_control import add_control
 from qiskit.result import marginal_counts
-from qiskit import  Aer
-from qiskit.extensions import UnitaryGate
+from qiskit_aer import Aer
+from qiskit.circuit.library import UnitaryGate
 from qiskit.quantum_info import random_unitary
 import multiprocessing
 from multiprocessing import Pool
@@ -102,8 +103,6 @@ def sum_frequencies_all(vec_circuit, N): #Evaluate the observed frequency at eac
             frequency = marginal_counts(results, indices = [0]).get_counts()['0'] / shots
         except:
             frequency = 1
-        else:
-            frequency = marginal_counts(results, indices = [0]).get_counts()['0'] / shots
         real = 2 * frequency - 1
         lista.append(1 - real)
     return sum(lista) / (2 ** N)
@@ -154,6 +153,7 @@ def Process(X, N, iterations, depth, cores):
         thetas[i]= np.random.uniform(0, 2 * np.pi)
     qk=[]
     for t in range(iterations):
+        print("Iteration: "+str(t)+"...")
         i_vec=[]
         for j in range(len(thetas)):
             i_vec.append(j)
@@ -188,15 +188,19 @@ def Process(X, N, iterations, depth, cores):
 if __name__ == "__main__":
     cores= 1 #If set > 1, it allows for the parallellization of the gradient computation.
     N = 1
-    iterations = 5
+    iterations = 2
     depth = 3
     seed_H = 42
+    print("Starting...")
     U_Haar = random_unitary(2 ** N, seed = seed_H) #Define Haar target
     V = UnitaryGate(U_Haar)
     Learn_U, qk = Process(V, N, iterations, depth, cores)
     costs=[]
     for j in range(iterations - 1):
         costs.append(sum_frequencies_all(qk[j * (2 ** N):(j + 1) * (2 ** N)], N)) 
-    np.save('Learnt_Unitary.txt', Learn_U, fmt='%.10f')
+
+    print("Cost function from iter to iter+1 from Process Tomography:")
+    print(costs)
+    np.save('Learnt_Unitary.txt', Learn_U)
     np.save('Costs.txt', costs)
 ##############################################################

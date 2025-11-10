@@ -1,13 +1,14 @@
 # Importing Libraries
 from qiskit import QuantumCircuit, transpile
 import qiskit.quantum_info as qi
-from qiskit import ClassicalRegister, QuantumRegister, execute
+from qiskit import ClassicalRegister, QuantumRegister
 from qiskit.circuit.add_control import add_control
 from qiskit.result import marginal_counts
 import numpy as np
 from random import randint
-from qiskit import  Aer
-from qiskit.extensions import UnitaryGate
+from qiskit_aer import Aer
+from qiskit.circuit.library import UnitaryGate
+
 from qiskit.quantum_info import random_unitary
 from multiprocessing import Pool
 
@@ -26,7 +27,7 @@ noise_prob = 0.04 # [0, 1]
 gamma = 0.7 # learning rate decay rate
 delta = 0.01 # minimum change value of loss value
 discounting_factor = 0.3 # [0, 1]
-backend = qiskit.Aer.get_backend('qasm_simulator')
+backend = Aer.get_backend('qasm_simulator')
 
 # For parameter-shift rule
 two_term_psr = {
@@ -226,7 +227,7 @@ def block_def(s, n, circuit, q, thetas):
         aux = 1
     for p in range(n):
         if 2 * p < n - (1 + aux):
-            circuit.cnot(q[2 * p + aux], q[2*p + 1 + aux]) 
+            circuit.cx(q[2 * p + aux], q[2*p + 1 + aux]) 
         
 
  
@@ -246,7 +247,7 @@ def cont_block(s, z, n, circuit, q, thetas):
     
     for p in range(n):
         if 2 * p < n - (1 + aux):
-                        circuit.toffoli(control_qubit1 = q[N * n + z], control_qubit2 = q[z*n + 2*p + aux], target_qubit =  q[z*n + 2*p + 1 + aux]) 
+                        circuit.ccx(control_qubit1 = q[N * n + z], control_qubit2 = q[z*n + 2*p + aux], target_qubit =  q[z*n + 2*p + 1 + aux]) 
     return circuit
 
 
@@ -359,30 +360,15 @@ def sum_frequencies_all2(vec_circuit, n):
         circ=vec_circuit[yi]
         qpe2 = circ.copy()
         qpe2.measure([N *n], [0])
-                                                                #print(aux_circuit)
-                                                                        #print("--------------------------------------------------------")
+                                                               
         T_aux_circuit = transpile(qpe2, aer_sim)
         results = aer_sim.run(T_aux_circuit, shots=shots).result()
-       # try:
-       #     frequency = marginal_counts(results, indices=[k]).get_counts()['1']/shots
-       # except:
-       #     frequency = 0
-
-        #else:
-        #    frequency = marginal_counts(results, indices=[k]).get_counts()['1']/shots
         frequency = marginal_counts(results, indices=[0]).get_counts()['1']/shots
-                                                                                                           # except:
-                                                                                                                      #     frequency = 0
-
-                                                                                                                                 # else:
-                                                                                                                                            #     frequency = marginal_counts(results, indices=[k]).get_counts()['1']/shots
-
+                                                                                       
         lista.append(frequency)
-                                                                                                                                                        #print(qpe2)
+
     suma  = sum(lista)/(4**n)
-                                                                                                                                                                #print(qpe2)
-                                                                                                                                                                  #  print("Cost: ")
-                                                                                                                                                                    #  print(suma)
+                                                                                                                                                               
     return suma
 
 def sum_frequencies_all(vec_circuit, n):
@@ -435,8 +421,6 @@ def sum_frequencies(circuit, n):
     for k in range(N):
         qpe2 = circuit.copy()
         qpe2.measure([N *n + k], [k])
-        #print(aux_circuit)
-        #print("--------------------------------------------------------")
         T_aux_circuit = transpile(qpe2, aer_sim)
         results = aer_sim.run(T_aux_circuit, shots=shots).result()
         try: 
@@ -456,40 +440,13 @@ def sum_frequencies(circuit, n):
     return suma
 
 def init(circuit, n, q, thetas,yi):
-    N = 1#2 ** n
-    #if (yi==1):
-    #    circuit.x(q[0])
-
-    #if (yi==2):
-    #    circuit.x(q[1])
-
-    #if (yi==3):
-    #    circuit.x(q[0])
-    #    circuit.x(q[1])
-
-    #circuit.x(q[6])
-    #circuit.x(q[4])
-    #circuit.x(q[3])
+    N = 1
+    
     a=np.arange(0,n)
     At=a.tolist()
-
     vec = random_statevector(2**n,seed=yi)
-
     initial_state = circuit.initialize(vec.data, At)
-
-
-
-
     return circuit
-
-    #N = 2 ** n
-    #for k in range(N):    
-    #    for i in range(n):    
-    #        circuit.ry(states[0][k][i], q[k * n + i])
-    #    if n > 1:
-    #        for i in range(n):
-    #            circuit.cz(control_qubit = q[k * n + i], target_qubit= q[k * n + int(states[1][k][i])])
-    #return circuit
     
 def target_prep(thetas, n, X, cont_block, depth,CW,yi= 0):
 
@@ -504,17 +461,13 @@ def target_prep(thetas, n, X, cont_block, depth,CW,yi= 0):
 
 def cost(cost_circuit, thetas, n, X, cont_block, depth, q_cost, c_cost):
     N = 1#2 ** n
-    #cost_circuit = cohe_sum_2(cost_circuit, n, q_cost, cont_block, thetas, depth)
     value = sum_frequencies(cost_circuit, n)
-    #print(cost_circuit)
     return value/N
 
 def Create_VQC_circ(q2,U_Gate, thetas, n, X, cont_block, depth, q_cost, c_cost):
     N = 1#2 ** n
 
     CH = add_control(U_Gate,1, ctrl_state=0,label="U_L")
-   
-    
 
     a=np.arange(0,n)
     At=a.tolist()
@@ -605,18 +558,9 @@ def ADAM_tomo(X, n, ites, depth, cont_block, cost,cores):
         Mu=UnitaryGate(M.data,label="Learn_U")
         ##########################################################################################################
         print(X+M)
-        #qk=[]
-        #for yi in range(4**n):
-        #    qk.append(create_whole_circuit(aux_circuit,Mu, thetas, n, X, cont_block, depth, q, c,yi))
-
-        #costt=sum_frequencies_all2(qk,n)
-        #print(costt)
-        #Create a function which creates the whole block, inluding the measurements
+      
         q2=create_whole_circuit(aux_circuit,Mu, thetas, n, X, cont_block, depth, q, c,CW)
 
-
-        #for depth=1 3.3s depth=8 13s - Op:pain normal method
-        #1- Define i_vec and j_vec
         i_vec=[]
 
         for j in range(len(thetas)):
@@ -628,8 +572,6 @@ def ADAM_tomo(X, n, ites, depth, cont_block, cost,cores):
         with Pool(cores) as pool:
         # Pool map for the seed in paralel.
             g_dat=pool.map(task_wrapper, args)
-
-        
             pool.close()
             # wait for all issued tasks to complete
             pool.join()
@@ -643,13 +585,8 @@ def ADAM_tomo(X, n, ites, depth, cont_block, cost,cores):
             w_hat[i] = w[i] / (1 - b_1 ** (t + 1))
             v_hat[i] = v[i] / (1 - b_2 ** (t + 1))
             thetas[i] -= alpha * w_hat[i] / (np.sqrt(v_hat[i]) + epsilon)
-        
 
         runtime2 = time() - runtime
-            #print("Step " + str(t) + "------------------------------------- Cost: " + str(cost(q2, thetas, n, X, states, cont_block, depth, q, c))+"| Time: "+str(runtime2))
-
-
-
 
         j_vec=[]
         for j in range(4**n):
@@ -669,27 +606,6 @@ def ADAM_tomo(X, n, ites, depth, cont_block, cost,cores):
             pool.join()
 
         qk=qk+all_cir
-
-        #aer_sim = Aer.get_backend('aer_simulator')
-        #shots = 100
-        #N = 1#2 ** n
-        #lista = []
-        #for yi in range(4**n):
-        #    qpe2=qk[yi]
-        #    qpe2.measure([n], [0])
-        #    T_aux_circuit = transpile(qpe2, aer_sim)
-        ##    results = aer_sim.run(T_aux_circuit, shots=shots).result()
-        #    frequency = marginal_counts(results, indices=[0]).get_counts()['1']/shots
-        #    lista.append(frequency)
-        #suma  = sum(lista)/(4**n)
-        #print(suma)
-
-
-
-
-    #costt=sum_frequencies_all2(qk,n)
-    #print("Cost:")
-    #print(costt)
 
     return M, U,runtime2,qk
 
@@ -717,11 +633,11 @@ import numpy as np
 if __name__ == "__main__":
 
     cores=1
-    seedU = 42#42
-    n = 3
+    seedU = 42
+    n = 2
     d = 2 ** n
     I = np.zeros((d, d))
-    ites = 1
+    ites = 2
     depth = 1
     for i in range(d):
         I[i][i] = 1
@@ -730,14 +646,6 @@ if __name__ == "__main__":
     c_cost = ClassicalRegister(n, 'c_cost')
     priorD = QuantumCircuit(q_cost, c_cost)
     
-    #U_Haar=random_unitary(2**n,seed=42)
-    
-   # priorD.h(0)
-   # priorD.h(1)
-    #priorD.h(0)
-    #U_Haar = qi.Operator(priorD)
-   
-    #U=UnitaryGate(U_Haar.data)
 
     U = random_unitary(d, seed=seedU)
 

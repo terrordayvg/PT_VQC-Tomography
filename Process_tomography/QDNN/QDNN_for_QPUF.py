@@ -6,9 +6,10 @@ import numpy as np
 import math
 
 # importing Qiskit
-from qiskit import IBMQ, Aer, transpile, assemble
+from qiskit import transpile, assemble
+from qiskit_aer import Aer
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
-from qiskit.extensions import *
+from qiskit.circuit.library import UnitaryGate
 
 # import basic plot tools
 from qiskit.visualization import plot_histogram
@@ -29,12 +30,8 @@ from multiprocessing import Pool
 
 
 # Importing standard Qiskit modules
-from qiskit import QuantumCircuit, QuantumRegister, IBMQ, execute, transpile, Aer, assemble
-from qiskit.providers.aer import QasmSimulator
-from qiskit.tools.monitor import job_monitor
+from qiskit import *
 from qiskit.circuit import Parameter
-from qiskit.opflow import Zero, One, X, Y, Z, I
-from qiskit.providers.aer.noise import NoiseModel
 
 # import basic plot tools
 from qiskit.visualization import plot_histogram
@@ -50,8 +47,6 @@ import matplotlib.pyplot as plt
 import cmath
 
 import pennylane as qml
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 import scipy as sc
@@ -61,62 +56,41 @@ from time import time
 from random import sample
 import matplotlib.pyplot as plt
 import numpy as np
+
+from qiskit.quantum_info import state_fidelity
+import qiskit.quantum_info as qi
+from qiskit.result import marginal_counts
+import math
+
+
+
+from multiprocessing.pool import ThreadPool
+
 #############################################################################################################
 ####################################### All functions for the QDNN definition ###############################
 
 #eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-def fidelityLine(qnnArch,Predrho, C1,C2,Testrho,total_t):
+def fidelityLine(qnnArch,Predrho, C1,C2,Testrho,total_t,n):
     kind = "randomUnitary"
-    # make a unitary for the training data
-    #networkUnitary = randomQubitUnitary(qnnArch[-1])
-    # create the training data
-    ##trainingData = randomTrainingData(networkUnitary, numTrainingPairs)
-    # create a sublist of the training data with the (un)supervised pairs (trainingDataSv and trainingDataUsv)
-    # and its labels (listSv and listUsv)
-    #trainingData = randomTrainingData(networkUnitary, numTrainingPairs,SIn,SOut) #qt.Qobj(TData)
-    #print("Prediction:")
-    #print(Predrho)
-    #print("")
-
-   # print("Testing:")
-    #print(Testrho)
-    print("")
-
-    #Corp=Predrho
-
-    #for j in range(total_t):
-    #    for i in range(8):
-    #        for l in range(8):
-    #            Corp[j][i][l]=Testrho[j][i][l]
 
     Testrhod=randomTestingData(total_t,list(Testrho))
     from qutip import fidelity
 
     
-    dims1 = [16]
-    dims2 = [16]
+    dims1 = [2**n]
+    dims2 = [2**n]
     dims = [dims1, dims2]
 
     for k in range(total_t):
         Predrho[k].dims = dims
 
-    #print("Predrho:")
-    #print("")
-    #print(Predrho)
-    #print("")
 
-    #print("Testrho:")
-    #print("")
-    #print(Testrhod[1])
-    print("")
     print("pred | test ===============")
     print(Predrho[0])
     print(Testrhod[0])
     print("")
     print("----------------------------------------------")
-    #print(Predrho[1])
-    #print(Testrhod[1])
-    print("")
+
     
     fidMatrix=[[0 for k in range(total_t)] for r in range(total_t)]
     for k in range(total_t):
@@ -126,16 +100,12 @@ def fidelityLine(qnnArch,Predrho, C1,C2,Testrho,total_t):
 
 
 
-    print("--------------------------------------------------==================================")
     print("Fidelity Matrix")
     print("")
     print(fidMatrix)
     print("")
     print("---------------------------------------------------================================")
-    #print(fidMatrix)
-            # oder
-            # p = (trainingData[i][0]*trainingData[i][0].dag() - trainingData[j][0]*trainingData[j][0].dag()) * (trainingData[i][0]*trainingData[i][0].dag() - trainingData[j][0]*trainingData[j][0].dag()).dag()
-            # fidMatrix[i][j] = p
+    
 
     # make fidelity plot
     plt.matshow(fidMatrix)
@@ -297,26 +267,17 @@ def howManyWrong(qnnArch, unitaries, trainingData, R):
 
 def randomQubitState(numQubits,SIn,SOut): # alternatively, use functions rand_ket and rand_ket_haar
     dim = 2**numQubits
-    #Make normalized state
-    ##res = np.random.normal(size=(dim,1)) + 1j * np.random.normal(size=(dim,1))
-    ##res = (1/sc.linalg.norm(res)) * res
-    #print("Input:")
-    #print(SIn[0])
-
-    ##################################################
-    #print("In:")
-    #print(SIn)
-    #print("")
-    #print("Out:")
-    #print(SOut)
-    #print("")
     res = qt.Qobj(SIn)
     resO= qt.Qobj(SOut)
+
     #Make dims list
     dims1 = [2 for i in range(numQubits)]
     dims2 = [1 for i in range(numQubits)]
     dims = [dims1, dims2]
+    print(SIn,SOut,dims)
+
     res.dims = dims
+
     resO.dims= dims
     #Return
     return res,resO
@@ -333,34 +294,21 @@ def randomTestingData(N,Test): # generating a testing rho based on Qobj identati
 
     Tclose=[[]]
 
-    Penny=[[[0 for k in range(16)] for r in range(16)]for y in range(total_s)]
+    Penny=[[[0 for k in range(dim)] for r in range(dim)]for y in range(total_s)]
 
     trainingData=[]
     #Create training data pairs
     for i in range(N):
-        for j in range(16):
-            for k in range(16):
+        for j in range(dim):
+            for k in range(dim):
                 Penny[i][j][k]=Test[i][j][0][k]
 
-
-        #print("----------------------------------------------------")
-        #print("Generation N "+str(i)+":")
-        #print(Test[i])
-        print("")
-
-        #print(Test[i][0])
-        print("")
-
-        #print(Test[i][0][0])
-        print("")
-
-        #print(Test[i][1][0][0])
         print("")
         
         #print(Test[0][0][i])
         Testd=qt.Qobj(Penny[i])
-        dims1 = [16]
-        dims2 = [16]
+        dims1 = [dim]
+        dims2 = [dim]
         dims = [dims1, dims2]
         Testd.dims = dims
         #t,ut = randomQubitState(numQubits,SIn[i],SOut[i])
@@ -411,11 +359,12 @@ def randomNetwork(qnnArch, numTrainingPairs,SIn,SOut):
     return (qnnArch, networkUnitaries, networkTrainingData, networkUnitary)
 
 
+#Creates generates the cost function based on <psi|rho|psi>
 def costFunction(trainingData, outputStates):
     costSum = 0
     for i in range(len(trainingData)):
         costSum += trainingData[i][1].dag() * outputStates[i] * trainingData[i][1]
-    return costSum.tr()/len(trainingData)
+    return costSum.real/len(trainingData)
 
 
 def makeLayerChannel(qnnArch, unitaries, l, inputState):
@@ -539,16 +488,13 @@ def makeUpdateMatrixTensored(qnnArch, unitaries, lda, ep, trainingData, storedSt
 
 def qnnTraining(qnnArch, initialUnitaries, trainingData, lda, ep, trainingRounds, alert=0):
     
-    ### FEEDFORWARD    
     #Feedforward for given unitaries
     s = 0
     currentUnitaries = initialUnitaries
     storedStates = feedforward(qnnArch, currentUnitaries, trainingData)
 
     #Cost calculation for given unitaries
-    outputStates = []
-    for k in range(len(storedStates)):
-        outputStates.append(storedStates[k][-1])
+    outputStates = [storedStates[k][-1] for k in range(len(storedStates))]
     plotlist = [[s], [costFunction(trainingData, outputStates)]]
     
     #Optional
@@ -582,7 +528,7 @@ def qnnTraining(qnnArch, initialUnitaries, trainingData, lda, ep, trainingRounds
         outputStates = []
         for m in range(len(storedStates)):
             outputStates.append(storedStates[m][-1])
-        plotlist[0].append(s)
+        plotlist[0].append(s*10)
         plotlist[1].append(costFunction(trainingData, outputStates))
         runtimet2 = time() - runtimet
         #print("Output_States")
@@ -827,15 +773,11 @@ def decimalToBinary(ip_val):
     else:
         tc,tb,ta,t0,t1,t2,t3,t4,t5,t6=b
 
-
-
     return int(t4),int(t5),int(t6)
-
 
 from qiskit.circuit.add_control import add_control
 from sympy import *
 
-from qiskit.providers.aer import QasmSimulator, AerSimulator
 
 def qft_dagger(qc, n):
     """n-qubit QFTdagger the first n qubits in circ"""
@@ -978,194 +920,133 @@ def State_distribution2D(delta, shots, initial_state_qiskit, noise,random):
                 
     return Final_vectorx,Delta,Final_vectorz
 
-def Backbone(qis_seed):
-
+def Backbone(qis_seed,n_ancilla=2,n_target=2, seedH=2):
     
-
-
+    """
+    Generalized Backbone function with arbitrary number of ancilla and target qubits.
+    
+    Args:
+        qis_seed (int): Seed for reproducibility
+        n_ancilla (int): Number of ancilla qubits
+        n_target (int): Number of target qubits
+        
+    Returns:
+        Vec_in (np.array): Initial statevector
+        Vec_out (np.array): Statevector after applying the circuit
+    """
     np.random.seed(qis_seed)
-    #J_vec=[0]*9
-    #for k in range(9):
-    #    J_vec[k]=np.random.uniform(0,1)
-    #print(qis_seed)
     
-    on=np.random.uniform(0, pi)
-    on2=np.random.uniform(0, pi)
-    on3=np.random.uniform(0, pi)
-    on4=np.random.uniform(0, pi)
-    on5=np.random.uniform(0, pi)
-    on6=np.random.uniform(0, pi)
-   # print(on,on2,on3,on4,on5)
-
-    #time=np.random.uniform(0, pi)   #This is your delta
-
-    ##delta=np.random.uniform(0,pi)
-    ##n_Trotter=10
-    ##deltaN=delta/n_Trotter
-
-
-# Create and set up circuit
-######################################################## Initialization ####################################################################
-
-    q = QuantumRegister(4, 'q')
-    c = ClassicalRegister(2, 'c')
-    qpe2 = QuantumCircuit(q,c)
-
-
-    # Try to see how fidelity changes if you apply the random initialization method, does it change or no?
-    #qpe2.ry(on6,1)
-    qpe2.ry(on3,2)
-    #qpe2.ry(on2,5)
-    #qpe2.ry(on,6)
-
-    Init1=random_unitary(4, seed=qis_seed)
-    Init2=UnitaryGate(Init1.data,label="Har")
-    qpe2.append(Init2, [2,3])
-
-
-    #This willl be an initialization for the Heisenber 3d model
+    total_qubits = n_ancilla + n_target
+    q = QuantumRegister(total_qubits, 'q')
+    c = ClassicalRegister(n_ancilla, 'c')
+    qc = QuantumCircuit(q, c)
     
-
-
-    ######################################################################################################################
-    ## Definition of the Heisenber 3d model
-    CHar=random_unitary(4, seed=42)
-    CHar2=UnitaryGate(CHar.data,label="Har")
-    #print(CHar.data)
-
-    CHar3 = add_control(CHar2,1, ctrl_state=1,label="CHar")
-
-    #Trotter_gate = Trotter_cc_3D(deltaN,J_vec).to_instruction()                           
-
-
-    #CHar=random_unitary(8, seed=qis_seed)
-    #CHar2=UnitaryGate(CHar.data,label="Har")
-
-
-
-
-
-   # CHar3 = add_control(Trotter_gate,1, ctrl_state=1,label="CTrotter")
-
-        
-    for qubit in range(2):
-        qpe2.h(qubit)
-
-
-
-    # Obtain state vector at the start of the simulation
-    stateIn = Statevector(qpe2)
-
-    repetitions=1
-    for counting_qubit in range(2):
-        for j in range(repetitions):
-            qpe2.append(CHar3, [counting_qubit,2,3])
+    # Random rotation for target qubits
+    for tq in range(n_ancilla, total_qubits):
+        qc.ry(np.random.uniform(0, pi), tq)
+    
+    # Random unitary on target qubits
+    Init = random_unitary(2**n_target, seed=qis_seed)
+    Init_gate = UnitaryGate(Init.data, label="Init")
+    target_qubits = list(range(total_qubits - n_target, total_qubits))
+    qc.append(Init_gate, target_qubits)
+    
+    # Controlled random unitary for QPE-like evolution
+    CHar = random_unitary(2**n_target, seed=seedH)
+    CHar_gate = UnitaryGate(CHar.data, label="CHar")
+    CHar_controlled = add_control(CHar_gate, 1, ctrl_state=1, label="C-CHar")
+    
+    # Apply Hadamards to ancilla qubits
+    for aq in range(n_ancilla):
+        qc.h(aq)
+    
+    # Apply controlled operations in QPE style
+    repetitions = 1
+    for aq in range(n_ancilla):
+        for _ in range(repetitions):
+            qc.append(CHar_controlled, [aq] + list(range(n_ancilla, total_qubits)))
         repetitions *= 2
-
-        
-    qft_dagger(qpe2,2)
-
-
-#    qpe2.measure([0,1,2],[0,1,2])
-
-####################################################################################################################################
-
+    
+    # Inverse QFT on ancilla
+    qft_dagger(qc, n_ancilla)
+    
+    # Get initial statevector
+    stateIn = Statevector(qc)
+    
+    # Simulate
     backend = Aer.get_backend("statevector_simulator")
-    result = execute(qpe2, backend=backend, shots=1,seed_transpiler=qis_seed).result()
-    stateOut=result.get_statevector()
+    qc_t = transpile(qc, backend)
+    result = backend.run(qc_t, seed_transpiler=qis_seed).result()
+    
+    stateOut = result.get_statevector()
 
-    #print("RHO:")
-    #print(rho_F)
-    # Calculate the state in a vector format
-    #In / Out
-    Vec_in=np.array(stateIn)
-    Vec_out=np.array(stateOut)
-    #Data=[Vec_in,Vec_out]
+    
+    return np.array(stateIn), np.array(stateOut)
 
 
-    return Vec_in,Vec_out
-
-
-def Backbone2(qis_seed):
-
+def Backbone2(qis_seed,n_ancilla=2,n_target=2,seedH=2):
+    
+    """
+    Generalized Backbone function with arbitrary number of ancilla and target qubits.
+    
+    Args:
+        qis_seed (int): Seed for reproducibility
+        n_ancilla (int): Number of ancilla qubits
+        n_target (int): Number of target qubits
+        
+    Returns:
+        Vec_in (np.array): Initial statevector
+        Vec_out (np.array): Statevector after applying the circuit
+    """
     np.random.seed(qis_seed)
-    #print(qis_seed)
-    #print(qis_seed)
     
-    on=np.random.uniform(0, pi)
-    on2=np.random.uniform(0, pi)
-    on3=np.random.uniform(0, pi)
-    on4=np.random.uniform(0, pi)
-    on5=np.random.uniform(0, pi)
-    on6=np.random.uniform(0, pi)
-   # print(on,on2,on3,on4,on5)
-
-    time=np.random.uniform(0, pi)   #This is your delta
-
-
-# Create and set up circuit
-######################################################## Initialization ####################################################################
-
-    q = QuantumRegister(4, 'q')
-    c = ClassicalRegister(2, 'c')
-    qpe2 = QuantumCircuit(q,c)
-
-    #This willl be an initialization for the Heisenber 3d model
-    qpe2.ry(on,2)
-    #qpe2.ry(on6,3)
-    #qpe2.ry(on2,5)
-
-    Init1=random_unitary(4, seed=qis_seed)
-    Init2=UnitaryGate(Init1.data,label="Har")
-    qpe2.append(Init2, [2,3])
-
-
-    ######################################################################################################################
-    ## Definition of the Heisenber 3d model
-    CHar=random_unitary(4, seed=42)
-    print(CHar.data)
-    CHar2=UnitaryGate(CHar.data,label="Har")
-    CHar3 = add_control(CHar2,1, ctrl_state=1,label="CHar")
-
-        
-    for qubit in range(2):
-        qpe2.h(qubit)
-
-
-
-    # Obtain state vector at the start of the simulation
-    stateIn = Statevector(qpe2)
-
-    repetitions=1
-    for counting_qubit in range(2):
-        for j in range(repetitions):
-            qpe2.append(CHar3, [counting_qubit,2,3])
+    total_qubits = n_ancilla + n_target
+    q = QuantumRegister(total_qubits, 'q')
+    c = ClassicalRegister(n_ancilla, 'c')
+    qc = QuantumCircuit(q, c)
+    
+    # Random rotation for target qubits
+    for tq in range(n_ancilla, total_qubits):
+        qc.ry(np.random.uniform(0, pi), tq)
+    
+    # Random unitary on target qubits
+    Init = random_unitary(2**n_target, seed=qis_seed)
+    Init_gate = UnitaryGate(Init.data, label="Init")
+    target_qubits = list(range(total_qubits - n_target, total_qubits))
+    qc.append(Init_gate, target_qubits)
+    
+    # Controlled random unitary for QPE-like evolution
+    CHar = random_unitary(2**n_target, seed=seedH)
+    CHar_gate = UnitaryGate(CHar.data, label="CHar")
+    CHar_controlled = add_control(CHar_gate, 1, ctrl_state=1, label="C-CHar")
+    
+    # Apply Hadamards to ancilla qubits
+    for aq in range(n_ancilla):
+        qc.h(aq)
+    
+    # Apply controlled operations in QPE style
+    repetitions = 1
+    for aq in range(n_ancilla):
+        for _ in range(repetitions):
+            qc.append(CHar_controlled, [aq] + list(range(n_ancilla, total_qubits)))
         repetitions *= 2
-
-        
-    qft_dagger(qpe2,2)
-
-
-#    qpe2.measure([0,1,2],[0,1,2])
-
-####################################################################################################################################
-
+    
+    # Inverse QFT on ancilla
+    qft_dagger(qc, n_ancilla)
+    
+    # Get initial statevector
+    stateIn = Statevector(qc)
+    
+    # Simulate
     backend = Aer.get_backend("statevector_simulator")
-    result = execute(qpe2, backend=backend, shots=1,seed_transpiler=qis_seed).result()
-    stateOut=result.get_statevector()
+    qc_t = transpile(qc, backend)
+    result = backend.run(qc_t, seed_transpiler=qis_seed).result()
+    
+    stateOut = result.get_statevector()
 
     rho_F = np.array(qi.DensityMatrix(stateOut))
 
-    # Calculate the state in a vector format
-    #In / Out
-    Vec_in=np.array(stateIn)
-    Vec_out=np.array(stateOut)
-    #Data=[Vec_in,Vec_out]
-
-    #print("")
-    #print(Vec_out)
-
-    return Vec_in,Vec_out,rho_F
+    return np.array(stateIn), np.array(stateOut),rho_F
 
 
 
@@ -1173,49 +1054,86 @@ def Backbone2(qis_seed):
 # wrapper function for task
 def task_wrapper(args):
     # call task() and unpack the arguments
-    return Backbone(args)
+    return Backbone(*args)
 
 def task_wrapper2(args):
     # call task() and unpack the arguments
-    return Backbone2(args)
+    return Backbone2(*args)
 
 
-from qiskit.providers.fake_provider import FakeCambridge
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, execute
-from qiskit.quantum_info import state_fidelity
-import qiskit.quantum_info as qi
+def plot_cost_function(x, y, xlabel="Iterations", ylabel="Cost", title="Cost Function vs. iterations",
+                       line_color='royalblue', save_path='Costfunct.png',
+                       show=True, save=True):
+    """
+    Create and optionally save a styled cost function plot.
+
+    Parameters
+    ----------
+    x : array-like
+        X-axis data (e.g., s values)
+    y : array-like
+        Y-axis data (e.g., cost values)
+    xlabel : str, optional
+        Label for the X-axis
+    ylabel : str, optional
+        Label for the Y-axis
+    title : str, optional
+        Title of the plot
+    line_color : str, optional
+        Color of the plot line
+    save_path : str, optional
+        File path to save the plot
+    show : bool, optional
+        Whether to display the plot
+    save : bool, optional
+        Whether to save the plot as a file
+    """
+
+    plt.close('all') #close all open window instances
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, y, color=line_color, linewidth=2.5, marker='o', markersize=5, label='Cost Function')
+
+    plt.xlabel(xlabel, fontsize=12, labelpad=10)
+    plt.ylabel(ylabel, fontsize=12, labelpad=10)
+    plt.title(title, fontsize=14, fontweight='bold', pad=15)
+
+    plt.grid(True, which='both', linestyle='--', alpha=0.6)
+    plt.legend(frameon=True, loc='best')
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    plt.tight_layout()
+
+    if save:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
+    if show:
+        plt.show()
+    else:
+        plt.close()
 
 
-from qiskit.result import marginal_counts
-import math
-
-
-
-from multiprocessing.pool import ThreadPool
 
 if __name__ == "__main__":
 
-
-    
     # Parameters to define
     seedc=100
     ntrial=0
     m=0
     cores=1
 
-    qnnArch=[4,4]   #Arquitecture of the NN
+    qnnArch=[2,2]   #Arquitecture of the NN
+
+    if qnnArch[0]!=qnnArch[1]:
+        print("Error: Dim QNN should be the same for both layers eg. 2,2 or 4,4")
+        exit()
+
     total_s=2    #Number of Shots training
     total_t=2    #Number of Shots testing
-    seedH=55     #Seed of Harr random unitary generation
-    seedci=654   #Seed of ci initialization
-    seedtran=33  #Seed of transpiler
+    seedH=442     #Seed of Harr random unitary generation
 
     workers=1 #Numbers of workers for paralellization
     ############################################################################
-
-
     #Qutip initial definiton 0 and 1 states in tensor and normal forms
-
     #ket states
     qubit0 = qt.basis(2,0)
     qubit1 = qt.basis(2,1)
@@ -1235,44 +1153,27 @@ if __name__ == "__main__":
     qis_seed=np.arange(total_s)
     qis_seed2=np.arange(off_set,off_set+total_t)
 
-    #print(qis_seed)
-    #print(qis_seed2)
-
   
-    args = [qis_seed[i] for i in range(total_s)]
-    args2 = [qis_seed2[i] for i in range(total_t)]
+    args = [[qis_seed[i],int(qnnArch[0]/2),int(qnnArch[0]/2), seedH ] for i in range(total_s)]
+    args2 =[[qis_seed2[i],int(qnnArch[0]/2),int(qnnArch[0]/2), seedH]  for i in range(total_t)]
 
 
     print("Generation of training data:")
     with Pool(cores) as pool:
     # Pool map for the seed in paralel.
         Training_Data=pool.map(task_wrapper, args)
-
-        
         pool.close()
-    # wait for all issued tasks to complete
         pool.join()
 
     print("Generation of testing data:")
     with Pool(cores) as pool:
     # Pool map for the seed in paralel.
         Testing_Data=pool.map(task_wrapper2, args2)
-
-        
         pool.close()
-    # wait for all issued tasks to complete
         pool.join()
 
 
     print("Training Data Generation:")
-    #print(Training_Data)
-    #print("")
-    #print(Training_Data[0][0][0])
-    #print("")
-    #print(Training_Data[0][0][0])
-
-    #[[dict() for x in range(64)] for y in range(seedc)] 
-
     Pos_c1=[[[0] for r in range(len(Training_Data[0][0]))]for y in range(total_s)]
     Pos_c2=[[[0] for r in range(len(Training_Data[0][0]))]for y in range(total_s)]
 
@@ -1282,48 +1183,20 @@ if __name__ == "__main__":
 
 
     print("")
-    #print(Training_Data[0][0][0])
-    #print(Training_Data[0][0][1])
 
+    datasets = [
+    (Pos_c1, Training_Data, 0, total_s),
+    (Pos_c2, Training_Data, 1, total_s),
+    (Pos_ct1, Testing_Data, 0, total_t),
+    (Pos_ct2, Testing_Data, 1, total_t),
+    (Pos_ct3, Testing_Data, 2, total_t)
+    ]
 
+    for pos, data, idx, total in datasets:
+        for i in range(total):
+            for k in range(len(data[0][idx])):
+                pos[i][k][0] = data[i][idx][k]  
 
-
-    for i in range(total_s):
-        for k in range(len(Training_Data[0][0])):
-            Pos_c1[i][k][0]=Training_Data[i][0][k]
-
-
-    for i in range(total_s):
-        for k in range(len(Training_Data[0][1])):
-            Pos_c2[i][k][0]=Training_Data[i][1][k]
-
-
-    for i in range(total_t):
-        for k in range(len(Testing_Data[0][0])):
-            Pos_ct1[i][k][0]=Testing_Data[i][0][k]
-
-
-    for i in range(total_t):
-        for k in range(len(Testing_Data[0][1])):
-            Pos_ct2[i][k][0]=Testing_Data[i][1][k]
-
-
-    for i in range(total_t):
-        for k in range(len(Testing_Data[0][2])):
-            Pos_ct3[i][k][0]=Testing_Data[i][2][k]
-
-    #print(Pos_c1)
-    #print("")
-    #print("")
-    #print(Pos_c2)
-    #print("")
-
-    #for i in range(total_s):
-    #    for k in range(len(Training_Data[0][2])):
-    #        Pos_c3[i][k][0]=Training_Data[i][2][k]
-
-
-    
     print("")
     print("Definition of QDNN and Training step:")
     print("--------------------------")
@@ -1332,18 +1205,11 @@ if __name__ == "__main__":
     print("")
     print("--------------------------")
     print("Fidelity between all training set final state vectors")
-    ##fidelityMatrixRandomUnitary(qnnArch, total_s, Pos_c1, Pos_c2)
-
-
-    print("")
     print("--------------------------")
 
     network33 = randomNetwork(qnnArch, total_s, Pos_c1, Pos_c2)
-    #print("1")
-    #print("Training data:")
-    #print(network33[2])
 
-    #                                      qnnArch|  initialUnitaries| trainingData|lda| ep  |trainingRounds| alert=0
+    #qnnArch|  initialUnitaries| trainingData|lda| ep  |trainingRounds| alert=0
     plotlist33, unitaries33 = qnnTraining(network33[0], network33[1], network33[2], 1, 0.1, 15,1)
 
 
@@ -1351,47 +1217,23 @@ if __name__ == "__main__":
     ######################################## Post training steps ##########################################
     #######################################################################################################
 
-    #Steps: 
     network33t = randomNetwork(qnnArch, total_t, Pos_ct1, Pos_ct2)        # 1- Generate a random network with data from test set
-    #print("1")
-   #print("Testing data:")
-   # print(network33t[2])
-
     storedStates = feedforward(network33t[0], unitaries33, network33t[2]) # 2- Knowing initial unitaries from training set, generate predicted state vector
 
     outputStates = []
     for k in range(len(storedStates)):
         outputStates.append(storedStates[k][-1])
 
-    fidelityLine(qnnArch,outputStates,Pos_ct1,Pos_ct2,Pos_ct3,total_t)    # 3- Compare the predicted to tested state vector using fidelity and fidelity matrix
-
-
-
-
-
-   # print("Unitaries:")
-   # print(unitaries33)
-    
+    fidelityLine(qnnArch,outputStates,Pos_ct1,Pos_ct2,Pos_ct3,total_t,qnnArch[0])    # 3- Compare the predicted to tested state vector using fidelity and fidelity matrix
 
 
     print("")
     print("Cost function analysis:")
-    print("--------------------------")#
-    print("X DATA:")
-    print("")
-    print(plotlist33[0])
-    print("------------")
-    print("Y DATA:")
     print("")
     print(plotlist33[1])
     print("----------------------------")
-    print("-----------------------------------------------------------------------------")
-    plt.plot(plotlist33[0], plotlist33[1])
-    plt.xlabel("s")
-    plt.ylabel("Cost[s]")
-    plt.savefig('Costfunct.png')
-    plt.show()
-
+    plot_cost_function(plotlist33[0], plotlist33[1])
+    
 
 
     
