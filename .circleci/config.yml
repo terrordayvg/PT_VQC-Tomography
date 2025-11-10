@@ -2,29 +2,27 @@ version: 2.1
 orbs:
   python: circleci/python@2.0.3
   codecov: codecov/codecov@3.2.4
-  
 
 jobs:
-  test_manager: # this can be any name you choose
-    executor: python/default
+  test_manager:
+    executor:
+      name: python/default
+      python-version: "3.10"  # <-- specify Python version here
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: pip
       - run:
           name: Run tests
-          command: python -m pytest Testing/ -v --junitxml="coverage.xml" #python Process_tomography/test.py
+          command: python -m pytest Testing/ -v --junitxml="coverage.xml"
       - codecov/upload:
           file: '/home/circleci/project/coverage.xml'
           token: CODECOV_TOKEN
-            
-              
-          
       - persist_to_workspace:
           root: ~/project
           paths:
             - .
-
+          
 workflows:
   test_my_app:
     jobs:
