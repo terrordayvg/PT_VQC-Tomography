@@ -3,7 +3,7 @@
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 from qiskit.quantum_info import random_unitary
 from qiskit import QuantumRegister
 from qiskit import ClassicalRegister
