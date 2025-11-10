@@ -24,7 +24,7 @@ Installation of required libraries
 
 Usage
 
-               PT_VQC is divided into 3 distinct folders, responsible for:
+               PT_VQC is divided into 3 main topics, responsible for:
         
         Folders:  
                 * `State tomography`.
