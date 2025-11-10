@@ -5,12 +5,13 @@ import qiskit
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 from qiskit.quantum_info import random_unitary
-from qiskit import ClassicalRegister, QuantumRegister, execute
+from qiskit import ClassicalRegister, QuantumRegister
 from qiskit.circuit.add_control import add_control
 from qiskit.result import marginal_counts
 import qiskit.quantum_info as qi
-from qiskit.extensions import UnitaryGate
-from qiskit import assemble, Aer, IBMQ
+from qiskit.circuit.library import UnitaryGate
+from qiskit import assemble
+from qiskit_aer import Aer
 import multiprocessing
 from multiprocessing import Pool
 ##############################################################
@@ -100,8 +101,6 @@ def swap_test(circuit, N):
             counts =result.get_counts()['1'] / shots
         except:
             counts = 0
-        else:
-            counts = result.get_counts()['1'] / shots
         if counts > 0.49:
             counts = 0.49
         overlap = np.sqrt(1 - 2 * counts)
@@ -180,27 +179,25 @@ def singu(N, U, alphas, check_real, check_imag, depth): #Returns the learnt sing
             results_imag = aer_sim.run(T_h_test_imag, shots=shots).result()
             try:
                     pos_real[i] = results_real.get_counts()['0'] / shots
+                    L_real[i] += 2 * pos_real[i] - 1
             except:
                     if check_real[i] > 0.5:
                         pos_real[i] = 1
                     else:
                         pos_real[i] = 0
-
+                    
                     L_real[i] += 2 * pos_real[i] - 1
-            else:
-                    pos_real[i] = results_real.get_counts()['0'] / shots
-                    L_real[i] += 2 * pos_real[i] - 1
+            
             try:
                     pos_imag[i] = results_imag.get_counts()['0'] / shots
+                    L_imag[i] += 2 * pos_imag[i] - 1
             except:
                     if check_imag[i] > 0.5:
                         pos_imag[i] = 1
                     else:
                         pos_imag[i] = 0
                     L_imag[i] += 2 * pos_imag[i] - 1
-            else:
-                    pos_imag[i] = results_imag.get_counts()['0'] / shots
-                    L_imag[i] += 2 * pos_imag[i] - 1
+            
             singular[i] = complex(L_real[i], L_imag[i])
     return singular, pos_real, pos_imag
 
@@ -243,6 +240,7 @@ def SVD(N, depth, U, iterations, cores):
     cost = 1
     flag = 0
     for ites in range(iterations):
+        print("Iteration "+str(ites)+"...")
         ites += 1
         if cost < 0.35 and flag  == 0:
             singular, check_real, check_imag = singu(N, U, alphas, check_real, check_imag, depth)
@@ -279,11 +277,12 @@ def SVD(N, depth, U, iterations, cores):
 if __name__ == "__main__":
     N = 1
     d = 2 ** N
-    depth = 2
-    iterations = 20
+    depth = 7
+    iterations = 5
     cores = 1 #If set > 1, it allows for the parallellization of the gradient computation.
     U_Haar = random_unitary(d) #Haar-random target
     W_Haar = UnitaryGate(U_Haar)
+    print("Starting...")
     cost, singular, W = SVD(N, depth, W_Haar, iterations, cores)
     V = W.to_matrix()
     np.savetxt('unitary.txt', V, fmt = '%.10f')

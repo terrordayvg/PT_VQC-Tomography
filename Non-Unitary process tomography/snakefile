@@ -1,0 +1,22 @@
+rule all:
+    input:
+        "deviation.txt"
+
+rule step1:
+    input:
+        "svd_code.py"
+    output:
+        "singulars.txt",
+        "unitary.txt"
+    shell:
+        "python svd_code.py"
+
+rule step2:
+    input:
+        "attack_svd_code.py",
+        "singulars.txt",
+        "unitary.txt"
+    output:
+        "deviation.txt"
+    shell:
+        "python attack_svd_code.py"

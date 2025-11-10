@@ -2,12 +2,17 @@
 ##############################################################
 import numpy as np
 from qiskit.quantum_info import random_unitary
-from qiskit import ClassicalRegister, QuantumRegister, execute
-from qiskit import assemble, Aer, IBMQ
+from qiskit import ClassicalRegister, QuantumRegister
+from qiskit_aer import Aer
+
+from qiskit.circuit.library import UnitaryGate
+from qiskit import assemble
 from qiskit.circuit.add_control import add_control
 from qiskit.result import marginal_counts
 import qiskit.quantum_info as qi
-from qiskit.extensions import UnitaryGate
+import os
+from qiskit import *
+
 from qiskit.circuit.library import QFT
 
 #Auxilliary functions
@@ -66,10 +71,7 @@ def cyclic(outcome1, outcome2, A): #Outputs cyclic between generation and verifi
 
 #Outputs cyclic deviation for (depending on 'w') a SVD attack, a random attack or the user.
 ##############################################################
-def Forgery_SVD(U, T, A, w):
-                                M = np.loadtxt('file_path', dtype= complex) #Load unitary matrix encoding the different singular vectors
-                                M = UnitaryGate(M)                          #Load the different singular values
-                                eigens = np.loadtxt('file_path', dtype= complex)
+def Forgery_SVD(U, T, A, w,M,eigens):
                                 seedT = 10
                                 simulator = Aer.get_backend("qasm_simulator")
                                 circuit = QuantumCircuit(A + T, 2 * A)
@@ -120,12 +122,12 @@ def Forgery_SVD(U, T, A, w):
                                     key2, value2 = list(simp_counts2.items())[0]
                                     outcome2 = int(key2, 2)
                                 else:                                   #This "else" conditions preceeds the user-server interaction at verification.
-                                    circuit.reset(list_auxq)
+                                    circuit.reset(list_q)
                                     for qubit in range(A):
-                                        circuit.h(q[qubit])
+                                        circuit.h(qubit)
                                     repetitions = 1
                                     for counting_qubit in range(A):
-                                        listing = [q[A - 1 - counting_qubit]]
+                                        listing = [A - 1 - counting_qubit]
                                         for i in range(T):
                                                 listing.append(A +  i)
                                         for j in range(repetitions):
@@ -133,6 +135,7 @@ def Forgery_SVD(U, T, A, w):
                                         repetitions *= 2
                                     circuit = Inv_QFT(circuit, A) 
                                     circuit.measure(list_q, list_c_2)
+                                    print(circuit)
                                     t_circuit = transpile(circuit, simulator ,seed_transpiler = seedT)
                                     result = simulator.run(t_circuit, shots = 1).result()
                                     simp_counts1 = marginal_counts(result, indices = list_c_1).get_counts()
@@ -143,13 +146,38 @@ def Forgery_SVD(U, T, A, w):
                                     outcome2=int(key2, 2)
                                 return cyclic(outcome1, outcome2, A)        #Returns cyclic distance between generated and verification classical outcomes for the chosen type of interaction ('w').
 ##############################################################
+def initialization(T):
+    # Get the current directory where this script is located
+    current_dir = os.path.dirname(os.path.abspath(__file__))
 
+    # Build full paths to the required files
+    unitary_path = os.path.join(current_dir, "unitary.txt")
+    singulars_path = os.path.join(current_dir, "singulars.txt")
+
+    # Load the data
+    M = np.loadtxt(unitary_path, dtype=complex)  # Load unitary matrix encoding singular vectors
+    M = UnitaryGate(M)
+    
+    eigens = np.loadtxt(singulars_path, dtype=complex)  # Load singular values
+
+    # Generate a Haar-random unitary
+    U_Haar = random_unitary(2 ** T)
+    W_Haar = UnitaryGate(U_Haar)
+
+    return M, eigens, W_Haar
+
+
+if __name__ == "__main__":
 #Calling Forgery_SVD(U, T, A, eigens, M, w)
 ##############################################################
-A = 2
-T = 1
-w = 0 #0: qst_attack, 1: random_attack, 2: user
-U_Haar = random_unitary(2 ** T) #Haar-random unitary defining the QPUF
-W_Haar = UnitaryGate(U_Haar)
-deviation = Forgery_SVD(W_Haar, T, A, w)
+    A = 2
+    T = 1
+    w = 0 #0: qst_attack, 1: random_attack, 2: user
+    
+    M,eigens,W_Haar=initialization(T)
+    deviation = Forgery_SVD(W_Haar, T, A, w,M,eigens)
+    print("deviation")
+    print(deviation)
+    with open("deviation.txt", "w") as f:
+        f.write(str(deviation))
 ##############################################################
