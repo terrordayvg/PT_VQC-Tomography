@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 import numpy as np
 import sys, os
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import HGate
 
