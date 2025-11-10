@@ -1,0 +1,6 @@
+Testing----
+
+For the procedure of performing unit testing on all major functions in this repository, run pytest:
+
+python -m pytest -v
+
