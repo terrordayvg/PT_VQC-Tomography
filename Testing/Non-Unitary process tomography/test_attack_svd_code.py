@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 import numpy as np
 import sys, os
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..","..","Non-Unitary process tomography")))
 import attack_svd_code
@@ -38,3 +38,4 @@ def test_forgery_svd_runs(mock_inputs, w):
     # Check type and range
     assert isinstance(deviation, (int, float)), "Output should be a number."
     assert 0 <= deviation <= 2 ** A / 2, f"Deviation {deviation} out of valid cyclic range."
+
