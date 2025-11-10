@@ -1,15 +1,21 @@
 #Importing libraries
 ##############################################################
+
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 import numpy as np
 import qiskit
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 import qiskit.quantum_info as qi
-from qiskit import ClassicalRegister, QuantumRegister, execute
+from qiskit import ClassicalRegister, QuantumRegister
 from qiskit.circuit.add_control import add_control
 from qiskit.result import marginal_counts
-from qiskit import assemble, Aer, IBMQ
-from qiskit.extensions import UnitaryGate
+from qiskit import assemble
+from qiskit_aer import Aer
+
+from qiskit.circuit.library import UnitaryGate
 from qiskit.quantum_info import random_unitary
 from qiskit.circuit.library import QFT
 
@@ -107,8 +113,10 @@ def QPUF(X, circuit, T, A, reg): #Performs the QPUF operation and records the ou
                                             aux_v.append(aux[- 1 - h])
                                         entry = bin_to_dec(aux_v, A)
                                         circuit.x(- 2).c_if(reg, v)
+
                                         circuit.measure(- 2, A + entry)
                                         circuit.x(- 2).c_if(reg, v)  
+  
                                 return circuit
 
 def QPUF_veri(X, circuit, T, A, reg, flag, target): #Performs the QPUF operation and records the outcome in the ancilla register via "A" c-bits and an extra qubit. For generation and verification purposes.
@@ -144,7 +152,7 @@ def QPUF_veri(X, circuit, T, A, reg, flag, target): #Performs the QPUF operation
                                                 entry = bin_to_dec(aux_v, A)
                                                 circuit.x(-1).c_if(reg, v)
                                                 circuit.measure(- 1, A + entry)
-                                                circuit.x(- 1).c_if(reg, v)
+                                                circuit.x(-1).c_if(reg, v)
                                 flag += 1
                                 return circuit, flag
 
@@ -195,7 +203,8 @@ def gradient(depth, A, thetas, T, X): #Computation of the gradient.
                                                 qpe2 = QuantumCircuit(q_regg,c_regg)
                                                 qpe2 = QPUF(X, qpe2, T, A,c_regg)
                                                 listy = []
-                                                for b in range(2 * T + A + 2):
+                                                for b in range(2 * T + A + 2):                                                    
+
                                                     listy.append(b)
                                                 for o in range(2 ** A):
                                                     qpe2.append(gate_vqc_qst(depth, params, T, T + A, o, A, 2), listy).c_if(c_regg[A + o], 1)
@@ -229,6 +238,7 @@ def Adam_QPUF(T, A, X, depth, iterations): #Learns the QPUF post-measurement sta
                 for j in range(T):
                     thetas[y][i][j] = np.random.uniform(0, 2 * np.pi)
         for k in range(iterations):
+            print("Iteration "+str(k)+"...")
             freq = 0
             total = 0   
             counts = 0
@@ -242,6 +252,7 @@ def Adam_QPUF(T, A, X, depth, iterations): #Learns the QPUF post-measurement sta
                                     listing.append(b) 
                                 for o in range(2 ** A):
                                     qpe2.append(gate_vqc_qst(depth, thetas, T, T + A, o, A, 2), listing).c_if(c_reg[A + o], 1)
+
                                 qpe2, freq, total = swap(qpe2, A, T, freq, total)
                                 counts += 1
             freq = freq / total
@@ -283,7 +294,9 @@ def Forgery_QST(X, T, A, w, thetas):
                                         for b in range(2 * T + A + 1):
                                             listy.append(b)
                                         for o in range(2 ** A):
+
                                             circuit.append(gate_vqc_qst(depth, thetas, T, T + A, o, A, 1), listy).c_if(c_reg[A + o], 1)
+
                                         circuit, flag = QPUF_veri(X, circuit, T, A, c_reg, flag, T)
                                     elif w == 1:
                                         circuit, flag = QPUF_veri(X, circuit, T, A, c_reg, flag, T)
@@ -292,6 +305,8 @@ def Forgery_QST(X, T, A, w, thetas):
                                      
                                     circuit, flag = QPUF_veri(X, circuit, T, A, c_reg, flag, 0)
                                 t_circuit = transpile(circuit, simulator ,seed_transpiler = 10)
+                                #simulator = AerSimulator(method="automatic")  
+
                                 result = simulator.run(t_circuit, shots = 1).result()
                                 simp_counts1 = marginal_counts(result, indices = list_1).get_counts()
                                 key1, value_1 = list(simp_counts1.items())[0]
@@ -301,16 +316,18 @@ def Forgery_QST(X, T, A, w, thetas):
                                 outcome_2 = int(key2, 2)
                                 return cyclic(outcome_1, outcome_2, A)
 ##############################################################
-
+if __name__ == "__main__":
 #Calling Forgery_QST(W_Haar, T, A, w, thetas)
 ##############################################################
-A = 2
-T = 1
-w = 0 #0: qst_attack, 1: random_attack, 2: user
-U_Haar = random_unitary(2 ** T) #Haar-random unitary defining the QPUF
-W_Haar = UnitaryGate(U_Haar)
-depth = 2
-iterations = 10
-thetas, cost = Adam_QPUF(T, A, W_Haar, depth, iterations)
-deviation = Forgery_QST(W_Haar, T, A, w, thetas)
+    A = 2
+    T = 1
+    w = 0 #0: qst_attack, 1: random_attack, 2: user
+    U_Haar = random_unitary(2 ** T) #Haar-random unitary defining the QPUF
+    W_Haar = UnitaryGate(U_Haar)
+    depth = 2
+    iterations = 1
+    print("Processing...")
+    thetas, cost = Adam_QPUF(T, A, W_Haar, depth, iterations)
+    print("Starting forgery...")
+    deviation = Forgery_QST(W_Haar, T, A, w, thetas)
 ##############################################################

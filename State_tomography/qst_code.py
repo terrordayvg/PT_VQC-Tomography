@@ -3,11 +3,13 @@
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
-from qiskit.extensions import UnitaryGate
+from qiskit.circuit.library import UnitaryGate
 from qiskit.quantum_info import random_unitary
 from qiskit import QuantumRegister
 from qiskit import ClassicalRegister
-from qiskit import assemble, Aer, IBMQ
+from qiskit import assemble
+from qiskit_aer import Aer
+
 import matplotlib.pyplot as plt
 ##############################################################
 
@@ -55,7 +57,7 @@ def cost(thetas, depth, N): #Computation of the cost function
     swap_test_circuit.measure(0, 0)
     T_swap_test_circuit = transpile(swap_test_circuit, aer_sim,
     seed_transpiler = seedT)
-    shots = 1000
+    shots = 10000
     results = aer_sim.run(T_swap_test_circuit, shots = shots).result()
     try:
         frequency = results.get_counts()['1'] / shots 
@@ -114,5 +116,7 @@ iterations = 10
 depth = 2
 N = 1
 final_cost, thetas= QST(N, depth, iterations)
+print("Final cost function for QST after"+str(iterations)+" iterations:")
+print(final_cost)
 np.save('thetas.txt', thetas)
 ###################################################
