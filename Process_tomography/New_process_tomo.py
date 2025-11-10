@@ -7,7 +7,7 @@ from qiskit.result import marginal_counts
 import numpy as np
 from random import randint
 from qiskit_aer import Aer
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 
 from qiskit.quantum_info import random_unitary
 from multiprocessing import Pool
