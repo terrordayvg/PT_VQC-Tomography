@@ -1,4 +1,9 @@
- ·In svd_code.py the most important function to be found is "SVD(N, depth, W_Haar, iterations, cores)".
+-attack_svd_code.py needs svd_code.py to run first
+-Run snakefile with: "snakefile --cores 1" , it should run both codes in sequence.
+
+
+
+·In svd_code.py the most important function to be found is "SVD(N, depth, W_Haar, iterations, cores)".
   The arguments stand for:
     -N: Number of qubits to which the unitary is applied.
     -depth: Depth of the used variational quantum circuit for SVD.
