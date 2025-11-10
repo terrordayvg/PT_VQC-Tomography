@@ -64,8 +64,6 @@ Contents of requirements.txt
 
 How to cite?
 -----
-
-::
 ```bibtex
 @article{Galetsky_2024,
 doi = {10.1088/1367-2630/ad5df1},
