@@ -8,7 +8,3 @@ for unique initialization for a specific user using a QPUF.
 - In the end a confunsion matrix and cross entropy is also presented in terms of epoch evolution. (this has not been generalized yet for n qubits - change manually)
 
 An example of the output for such file is also present: Assuming the same generation, transpilation, per shot run and measurement seeds, if the DNN generated input state vector is equivalent to the user's one, the output measurement vector is exactly the same (as seen in the output file).
-
-
-============= Note: 10/14/2024 ===== library updates ===========
-To acess the IBM backend the library should be changed to "from qiskit_ibm_runtime import QiskitRuntimeService" (https://docs.quantum.ibm.com/api/qiskit-ibm-runtime/qiskit_ibm_runtime.QiskitRuntimeService)
