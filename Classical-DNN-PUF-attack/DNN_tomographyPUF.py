@@ -10,7 +10,7 @@ import numpy as np
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, transpile
 from qiskit_aer import Aer
 from qiskit.quantum_info import random_unitary
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
@@ -236,3 +236,4 @@ if __name__ == "__main__":
     print("\nExample test sample:")
     print("True angles :", Y_test[idx])
     print("Pred angles :", preds[idx])
+
