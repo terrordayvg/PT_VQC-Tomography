@@ -15,7 +15,7 @@ from qiskit.result import marginal_counts
 from qiskit import assemble
 from qiskit_aer import Aer
 
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 from qiskit.quantum_info import random_unitary
 from qiskit.circuit.library import QFT
 
