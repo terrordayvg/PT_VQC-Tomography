@@ -9,7 +9,7 @@ from qiskit import ClassicalRegister, QuantumRegister
 from qiskit.circuit.add_control import add_control
 from qiskit.result import marginal_counts
 import qiskit.quantum_info as qi
-from qiskit.circuit.library import UnitaryGate
+from qiskit.circuit.library.generalized_gates import UnitaryGate
 from qiskit import assemble
 from qiskit_aer import Aer
 import multiprocessing
