@@ -5,8 +5,8 @@ orbs:
   codecov: codecov/codecov@3.2.4
 jobs:
   test_manager:
-    #executor:
-    #  name: python/default
+    executor:
+      name: python/default
     steps:
       - checkout
       - python/install-packages:
