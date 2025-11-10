@@ -1,26 +1,27 @@
----
 version: 2.1
 orbs:
-  python: circleci/python@2.0.3
   codecov: codecov/codecov@3.2.4
+
 jobs:
   test_manager:
-    executor:
-      name: python/default
+    docker:
+      - image: cimg/python:3.9  # <-- Python 3.9
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
       - run:
           name: Run tests
           command: python -m pytest Testing/ -v --junitxml="coverage.xml"
       - codecov/upload:
-          file: /home/circleci/project/coverage.xml
+          file: '/home/circleci/project/coverage.xml'
           token: CODECOV_TOKEN
       - persist_to_workspace:
           root: ~/project
           paths:
             - .
+          
 workflows:
   test_my_app:
     jobs:
