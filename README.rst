@@ -65,7 +65,7 @@ Contents of requirements.txt
 How to Cite?
 ===========
 
-If you use this work, please cite the following paper:
+This work generates the PT_VQC and U-VQSVD algorithms, if you use this work, please cite the following paper:
 
 ::
 
