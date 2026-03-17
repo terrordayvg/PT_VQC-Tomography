@@ -1,5 +1,5 @@
 =========================================================================================================================
-``Variational Process Tomography`` - A repository to perform quantum attacks in a variational way
+``Variational Process Tomography`` - A repository to perform quantum attacks with novel variational algorithms (PT_VQC and U-VQSVD)
 =========================================================================================================================
 
 
