@@ -14,8 +14,18 @@
 .. image:: https://img.shields.io/badge/python-3.11-blue.svg
         :target: https://www.python.org/downloads/release/python-3110/
 
+Docker - Installation of environment to run the code
+::
+        1) Install Docker.
+        
+        2) Build docker in cmd with command eg.: docker build -t qst-project .
 
-Installation of required libraries
+        3) Run docker with pytest for testing functions with command eg.: docker run qst-project -m pytest Testing
+
+        4) Run docker for chosen file eg. process_tomography.py file, the command should be: docker run qst-project Process_tomography/process_tomography_code.py
+
+
+(Alternative - if not using Docker) Installation of required libraries
 
 ::
 
@@ -45,22 +55,17 @@ Contents of requirements.txt
 
 ::     
 
-        matplotlib==3.5.2
-        numpy==1.23.0
-        pandas==1.4.3
-        PennyLane==0.31.0
-        qiskit==0.39.4
-        qiskit_aer==0.11.2
-        qiskit_ibmq_provider==0.19.2
-        qiskit_ignis==0.7.1
-        qiskit_terra==0.22.3
-        qutip==4.7.1
-        scikit_learn==1.1.1
-        scipy==1.8.1
-        sympy==1.12
-        torch==1.12.0
-        tqdm==4.64.1
-        pytest==7.4.2
+        matplotlib==3.10.8
+        numpy==2.4.3
+        qiskit==1.1.2
+        qiskit-aer==0.17.2
+        scipy==1.17.1
+        sympy==1.14.0
+        pytest==9.0.2
+        pluggy==1.6.0 
+        tensorflow==2.21.0
+
+
 
 How to Cite?
 ===========
