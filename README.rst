@@ -15,8 +15,8 @@
         :target: https://www.python.org/downloads/release/python-3110/
 
 Docker - Installation of environment to run the code
-::
-        1) Install Docker.
+
+        1) Install Docker
         
         2) Build docker in cmd with command eg.: docker build -t qst-project .
 
