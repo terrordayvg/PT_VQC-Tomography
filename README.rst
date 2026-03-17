@@ -15,6 +15,7 @@
         :target: https://www.python.org/downloads/release/python-3110/
 
 Docker - Installation of environment to run the code
+-----
 
         1) Install Docker
         
