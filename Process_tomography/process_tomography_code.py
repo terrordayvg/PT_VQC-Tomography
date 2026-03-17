@@ -157,12 +157,12 @@ def Process(X, N, iterations, depth, cores):
         i_vec=[]
         for j in range(len(thetas)):
             i_vec.append(j)
-        args = [(thetas, N, X, depth, i_vec[i]) for i in range(len(i_vec))]
-        with Pool(cores) as pool:
-            g_dat = pool.map(task_wrapper, args)
-            pool.close()
-            pool.join()
-        grad = g_dat
+        args = [(thetas, N, X, depth, i) for i in range(len(thetas))]
+        if cores > 1:
+            with Pool(cores) as pool:
+                grad = pool.map(task_wrapper, args)
+        else:
+            grad = [task_wrapper(a) for a in args]
         for i in range(len(thetas)):
             w[i] = b_1 * w[i] + (1 - b_1) * grad[i]
             v[i] = b_2 * v[i] + (1 - b_2) * grad[i] ** 2
@@ -186,7 +186,7 @@ def Process(X, N, iterations, depth, cores):
 #Calling Process(X, N, iterations, depth, cores)
 ##############################################################
 if __name__ == "__main__":
-    cores= 1 #If set > 1, it allows for the parallellization of the gradient computation.
+    cores= 2 #If set > 1, it allows for the parallellization of the gradient computation.
     N = 1
     iterations = 2
     depth = 3
@@ -196,6 +196,15 @@ if __name__ == "__main__":
     V = UnitaryGate(U_Haar)
     Learn_U, qk = Process(V, N, iterations, depth, cores)
     costs=[]
+    for j in range(iterations - 1):
+        costs.append(sum_frequencies_all(qk[j * (2 ** N):(j + 1) * (2 ** N)], N)) 
+
+    print("Cost function from iter to iter+1 from Process Tomography:")
+    print(costs)
+    np.save('Learnt_Unitary.txt', Learn_U)
+    np.save('Costs.txt', costs)
+##############################################################
+
     for j in range(iterations - 1):
         costs.append(sum_frequencies_all(qk[j * (2 ** N):(j + 1) * (2 ** N)], N)) 
 
