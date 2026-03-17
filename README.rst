@@ -1,5 +1,5 @@
 =========================================================================================================================
-``PT_VQC and U-VQSVD Tomography`` - Generate attacks based on state tomography, process tomography and non-unitary process tomography
+``Variational Process Tomography`` - A repository to perform quantum attacks in a variational way
 =========================================================================================================================
 
 
