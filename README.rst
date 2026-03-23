@@ -47,7 +47,7 @@ Content
 
 
 
-Postgresql integration - Classical DNN PUF attack data storage 
+Postgresql integration - Classical DNN PUF attack project - how to use and store data 
 -----
 
         1) For data storage and updates in ``main.py``, you should install PostgreSQL (including ``psql``) if you plan to run long experiments.
