@@ -85,6 +85,10 @@ Contents of requirements.txt
         pytest==9.0.2
         pluggy==1.6.0 
         tensorflow==2.21.0
+        sqlalchemy==2.0.48
+        psycopg2==2.9.11
+        pandas==3.0.1
+
 
 
 
