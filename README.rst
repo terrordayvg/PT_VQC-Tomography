@@ -54,11 +54,11 @@ Postgresql integration - Classical DNN PUF attack project - how to use and store
 
         2) Create a database called ``qpuf_db``. You can do this by opening ``psql`` and running::
 
-       CREATE DATABASE qpuf_db;
+               CREATE DATABASE qpuf_db;
 
         3) In ``main.py``, update the database connection string to::
 
-       DB_URI = "postgresql+psycopg2://postgres:password@localhost:5432/qpuf_db"
+               DB_URI = "postgresql+psycopg2://postgres:password@localhost:5432/qpuf_db"
 
            Replace the username and password with your own PostgreSQL credentials (currently: username = postgres, password = password).
 
@@ -66,7 +66,7 @@ Postgresql integration - Classical DNN PUF attack project - how to use and store
 
         5) Open ``psql``, connect to your database, and view the generated table (called ``qpuf_train``) using::
 
-       SELECT * FROM qpuf_train;
+               SELECT * FROM qpuf_train;
 
            You can also inspect or modify the table using other SQL commands as needed.
 
