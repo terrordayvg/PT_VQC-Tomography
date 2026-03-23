@@ -7,10 +7,6 @@
         :target: https://dl.circleci.com/status-badge/redirect/circleci/5ZWV663xqw4uDT8KDmJgpW/G4piVvQ66XDUHGX4Az1BJj/tree/circleci-project-setup
 
 
-
-.. image:: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography/graph/badge.svg?token=880RTY0T96
-        :target: https://codecov.io/gh/terrordayvg/PT_VQC-Tomography
-
 .. image:: https://img.shields.io/badge/python-3.11-blue.svg
         :target: https://www.python.org/downloads/release/python-3110/
 
@@ -43,14 +39,36 @@ Content
                 * `State tomography`.
                 * `Process tomography`.
                 * `Non-unitary process tomography`
-
-                
-        Aditional: 
-                * `Classical Deep Neural Network (DNN) attack for QEPUF initialization reconstruction (Classical-DNN-PUF-attack)`.
+                * `Classical DNN PUF attack`
 
         Tests:  
                 * Pytest in Test folder, for all major functions in the codes.
                 * CircleCI is integrated for continuous integration (.circleci folder).
+
+
+
+Postgresql integration - Classical DNN PUF attack data storage 
+-----
+
+        1) For data storage and updates in ``main.py``, you should install PostgreSQL (including ``psql``) if you plan to run long experiments.
+
+        2) Create a database called ``qpuf_db``. You can do this by opening ``psql`` and running::
+
+       CREATE DATABASE qpuf_db;
+
+        3) In ``main.py``, update the database connection string to::
+
+       DB_URI = "postgresql+psycopg2://postgres:password@localhost:5432/qpuf_db"
+
+           Replace the username and password with your own PostgreSQL credentials (currently: username = postgres, password = password).
+
+        4) Set ``USE_POSTGRES = True`` in your code to enable saving data to the database.
+
+        5) Open ``psql``, connect to your database, and view the generated table (called ``qpuf_train``) using::
+
+       SELECT * FROM qpuf_train;
+
+           You can also inspect or modify the table using other SQL commands as needed.
 
 
 Contents of requirements.txt
